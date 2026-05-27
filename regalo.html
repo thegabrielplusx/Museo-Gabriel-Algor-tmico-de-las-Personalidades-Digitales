@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es-VE">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museo Gabriel Algoritmico de las Personalidades Digitales</title>
+    
+    <!-- LIBRERÍAS EXTERNAS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    
+    <style>
+        /* Se ha encapsulado todo en #regalo-wrapper para evitar colisiones de CSS */
+        #regalo-wrapper {
+            --manila-bg: #f4ebd0;
+            --manila-dark: #e3d5b0;
+            --ink-color: #1a1a1a;
+            --stamp-red: #c92a2a;
+
+            background-color: #111;
+            background-image: url('walpaper.webp'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--ink-color);
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+            position: relative; /* Contexto de contención */
+        }
+
+        #regalo-wrapper .folder {
+            background-color: var(--manila-bg);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.7);
+            border-radius: 4px;
+            position: relative;
+            max-width: 600px;
+            width: 100%;
+            padding: 3rem;
+            will-change: transform;
+            margin-top: 2rem;
+        }
+
+        #regalo-wrapper .tabs-container {
+            position: absolute;
+            top: -34px;
+            left: 20px;
+            display: flex;
+            gap: 5px;
+        }
+
+        #regalo-wrapper .folder-tab {
+            background-color: var(--manila-dark);
+            border: none;
+            padding: 8px 24px;
+            border-radius: 8px 8px 0 0;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            color: #333;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            box-shadow: 0 -3px 5px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        #regalo-wrapper .folder-tab:hover {
+            background-color: var(--manila-bg);
+            color: var(--ink-color);
+        }
+
+        #regalo-wrapper .typewriter-text {
+            text-shadow: 0px 0px 1px rgba(0,0,0,0.2);
+            line-height: 1.6;
+        }
+
+        #regalo-wrapper .stamp-restricted {
+            color: var(--stamp-red);
+            border: 4px solid var(--stamp-red);
+            padding: 0.5rem 1rem;
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            transform: rotate(-5deg);
+            position: absolute;
+            top: 2rem;
+            right: 1rem;
+            opacity: 0.85;
+            letter-spacing: 0.1em;
+            outline: 2px solid var(--stamp-red);
+            outline-offset: 4px;
+            mix-blend-mode: multiply;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        #regalo-wrapper .coffee-stain {
+            position: absolute;
+            width: 150px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid rgba(101, 67, 33, 0.15);
+            background: rgba(101, 67, 33, 0.03);
+            pointer-events: none;
+            mix-blend-mode: multiply;
+            z-index: 5;
+        }
+
+        #regalo-wrapper .stain-1 { top: -20px; left: -30px; transform: rotate(45deg); border-top-color: rgba(101, 67, 33, 0.25); }
+        #regalo-wrapper .stain-2 { bottom: 20px; right: 20px; width: 100px; height: 95px; border-width: 3px; opacity: 0.7; }
+
+        #regalo-wrapper .official-divider { border-top: 2px dashed #444; margin: 1.5rem 0; opacity: 0.5; }
+        #regalo-wrapper input::placeholder { color: rgba(0,0,0,0.4); font-style: italic; }
+        
+        #regalo-wrapper .paper-clip {
+            position: absolute;
+            width: 14px;
+            height: 40px;
+            border: 2px solid #777;
+            border-radius: 10px;
+            z-index: 10;
+            left: 50%;
+            transform: translateX(-50%);
+            background: transparent;
+            box-shadow: 2px 2px 3px rgba(0,0,0,0.4), inset 1px 1px 2px rgba(255,255,255,0.5);
+            border-bottom: 2px solid #555;
+            border-right: 2px solid #555;
+        }
+
+        @media (max-width: 480px) {
+            #regalo-wrapper .folder { padding: 1.5rem; }
+            #regalo-wrapper .stamp-restricted { font-size: 1.2rem; border-width: 3px; top: 1rem; }
+            #regalo-wrapper .tabs-container { top: -32px; left: 10px; }
+            #regalo-wrapper .folder-tab { padding: 6px 16px; font-size: 0.8rem; }
+        }
+
+        /* 3.1: Rayo (Lightning) */
+        @keyframes thunder-strike { 0%, 20%, 40%, 100% { opacity: 0; } 10%, 30% { opacity: 1; } 50% { opacity: 0.8; } }
+        #regalo-wrapper .lightning { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; background-color: white; opacity: 0; will-change: opacity; }
+        #regalo-wrapper .lightning.active { animation: thunder-strike 0.7s ease-out; }
+
+        /* 3.2: Temblores de Pantalla */
+        @keyframes shake-screen { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(-3px, 3px) rotate(-1deg); } 50% { transform: translate(3px, -3px) rotate(1deg); } 75% { transform: translate(-3px, -3px) rotate(-1deg); } }
+        #regalo-wrapper.shake-active { animation: shake-screen 0.1s infinite; }
+        
+        @keyframes heavy-shake { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 10% { transform: translate(-10px, 10px) rotate(-3deg); } 20% { transform: translate(10px, -10px) rotate(3deg); } 30% { transform: translate(-15px, -5px) rotate(-2deg); } 40% { transform: translate(15px, 5px) rotate(2deg); } 50% { transform: translate(-10px, 15px) rotate(-4deg); } 60% { transform: translate(10px, -15px) rotate(4deg); } 70% { transform: translate(-15px, 5px) rotate(-1deg); } 80% { transform: translate(15px, -5px) rotate(1deg); } 90% { transform: translate(-5px, -10px) rotate(0deg); } }
+        #regalo-wrapper.heavy-shake-active { animation: heavy-shake 0.1s infinite; }
+
+        /* 3.3: Efecto Glitch */
+        @keyframes glitch-effect { 0%, 40%, 80%, 100% { transform: translate(0); filter: invert(0); } 20% { transform: translate(-3px, 3px); filter: invert(0.2); } 60% { transform: translate(3px, 3px); filter: invert(0.8) hue-rotate(90deg); } }
+        #regalo-wrapper.glitch-active { animation: glitch-effect 0.15s 3; }
+
+        /* 4.1: Sangre */
+        #regalo-wrapper .blood-splatter { position: absolute; background-color: #610000; mix-blend-mode: multiply; opacity: 0; transform: scale(0); transition: transform 0.1s ease-out, opacity 0.1s ease-out; pointer-events: none; z-index: 20; will-change: transform, opacity; }
+        #regalo-wrapper .blood-screen { position: fixed; bottom: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(138, 3, 3, 0.85); z-index: 9998; pointer-events: none; transform: translateY(100%); transition: transform 6s ease-in-out; will-change: transform; }
+        #regalo-wrapper .blood-screen.active { transform: translateY(0); }
+
+        /* 4.2: Matrix */
+        #regalo-wrapper .matrix-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10000; background-color: black; opacity: 0; pointer-events: none; transition: opacity 0.5s ease-in; will-change: opacity; }
+        #regalo-wrapper .matrix-screen.active { opacity: 1; pointer-events: all; }
+
+        /* 4.4: Hielo (Ice Truck Killer) */
+        #regalo-wrapper .freeze-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, rgba(200,230,255,0.2) 0%, rgba(180,210,255,0.6) 100%); box-shadow: inset 0 0 150px rgba(255,255,255,0.9); z-index: 9997; pointer-events: none; opacity: 0; transition: opacity 1.5s ease-in; will-change: opacity; backdrop-filter: blur(2px); }
+        #regalo-wrapper .freeze-screen.active { opacity: 1; }
+
+        /* 4.3: Martillo (Asesino de la Trinidad) */
+        /* 4.6: Gato (Tom Rangel) */
+        @keyframes paw-step { 0% { opacity: 0; transform: scale(0.8); } 15% { opacity: 0.65; transform: scale(1); } 80% { opacity: 0.65; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
+        #regalo-wrapper .cat-paw { position: absolute; width: 45px; height: 45px; color: #444; z-index: 10005; pointer-events: none; opacity: 0; animation: paw-step 3.5s forwards; mix-blend-mode: multiply; }
+        
+        /* 4.7: Error 404 */
+        #regalo-wrapper .error-404-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 10010; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; color: #0F0; font-family: monospace; }
+        #regalo-wrapper .error-404-screen.active { opacity: 1; pointer-events: all; }
+        #regalo-wrapper .error-404-screen h2 { font-size: 5rem; text-shadow: 0 0 10px #0F0; }
+
+        /* 4.6: Invertir Colores (Negative) */
+        #regalo-wrapper.inverted-colors { filter: invert(1); transition: filter 0.8s ease; }
+    </style>
+</head>
+<body class="bg-black m-0 p-0"> <!-- Base fallback -->
+    
+    <!-- ==========================================================================
+         SECCIÓN HTML: CONTENEDOR ENCAPSULADO PARA CSS SCOPEADO
+         ========================================================================== -->
+    <div id="regalo-wrapper">
+        <!-- CAPAS DE SUPERPOSICIÓN (OVERLAYS) -->
+        <canvas id="matrix-canvas" class="matrix-screen"></canvas>
+        <div id="error-404-overlay" class="error-404-screen">
+            <h2 class="animate-pulse">404 - NOT FOUND</h2>
+        </div>
+        <div id="freeze-overlay" class="freeze-screen"></div>
+        <div id="lightning-overlay" class="lightning"></div>
+        <div id="blood-overlay" class="blood-screen"></div>
+        <div id="hammer-overlay" class="hammer-overlay"></div>
+        
+        <!-- DOCUMENTO PRINCIPAL (CARPETA) -->
+        <div class="folder typewriter-text" id="capture-area">
+            
+            <div class="tabs-container" data-html2canvas-ignore="true">
+                <button class="folder-tab" onclick="window.location.href='index.html'">Inicio</button>
+            </div>
+
+            <div id="splatter-container" class="absolute inset-0 pointer-events-none z-50 overflow-hidden rounded"></div>
+            
+            <div class="coffee-stain stain-1"></div>
+            <div class="coffee-stain stain-2"></div>
+            <div class="stamp-restricted">ACCESO RESTRINGIDO</div>
+
+            <header class="mb-8 border-b-2 border-black pb-4 mt-12">
+                <h1 class="text-2xl font-bold uppercase">Identificación Visitante</h1>
+                <p class="text-sm"><strong>FECHA:</strong> <span id="currentDate"></span></p>
+            </header>
+
+            <div class="mb-6">
+                <p class="mb-4">
+                    Advertencia: Estos ID solo son decorativos para que te puedas llevar un recuerdo de la pagina.
+                </p>
+            </div>
+
+            <div class="bg-[#e8dec3] p-5 rounded border border-[#d4c5a3] shadow-inner mb-6 relative z-10">
+                <div class="mb-5">
+                    <label for="userName" class="block font-bold mb-1 text-sm uppercase">Nombre del Visitante:</label>
+                    <input type="text" id="userName" class="w-full bg-transparent border-b-2 border-black focus:outline-none font-mono text-lg uppercase py-1" placeholder="Ej. Elliot A." autocomplete="off">
+                </div>
+
+                <div class="mb-2">
+                    <label for="userId" class="block font-bold mb-1 text-sm uppercase">ID de Visitante:</label>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="text" id="userId" class="w-full bg-transparent border-b-2 border-black focus:outline-none font-mono text-lg py-1 cursor-not-allowed" readonly placeholder="[PENDIENTE]">
+                        <button onclick="generarId()" class="bg-black text-white px-4 py-2 font-mono text-sm hover:bg-gray-800 border-2 border-black focus:outline-none transition-colors whitespace-nowrap">
+                            GENERAR ID
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="clearanceLevel" class="text-xs font-bold text-red-700 h-4 mt-2 uppercase tracking-wide"></div>
+            </div>
+
+            <div class="text-center relative z-10" data-html2canvas-ignore="true">
+                <button onclick="validarAcceso()" class="border-4 border-black px-8 py-3 font-bold text-lg uppercase tracking-widest hover:bg-black hover:text-white transition-all w-full sm:w-auto">
+                    Tomar Captura
+                </button>
+            </div>
+
+            <div id="systemMessage" class="mt-6 text-center font-mono font-bold text-sm h-8" data-html2canvas-ignore="true"></div>
+
+            <div class="official-divider mt-8"></div>
+            <p class="text-center text-[10px] opacity-60 font-bold uppercase tracking-wider mb-8">
+                El sistema no registrará su ID solo es un ID decorativo.
+            </p>
+
+            <!-- SECCIÓN AUTOR (Corregida y movida DENTRO de .folder) -->
+            <div class="pt-8 border-t-2 border-dashed border-[#888] flex flex-col sm:flex-row items-center sm:items-start gap-6 relative">
+                <div class="relative transform rotate-[-4deg] shrink-0 mt-2">
+                    <div class="paper-clip" style="top: -15px;"></div>
+                    <a href="https://github.com/thegabrielplusx" target="_blank" rel="noopener noreferrer">
+                        <img src="autor.webp" alt="Foto del Autor" onerror="this.onerror=null;this.src='https://placehold.co/100x100/333/fff?text=Autor';" class="w-24 h-24 object-cover border-4 border-white shadow-lg filter grayscale contrast-125">
+                    </a>
+                </div>
+                
+                <div class="text-center sm:text-left z-10">
+                    <h4 class="font-bold text-xs text-[#555] uppercase tracking-widest mb-1">Investigador Asignado</h4>
+                    <p class="text-4xl font-bold text-blue-900 my-2" style="font-family: 'Brush Script MT', 'Lucida Handwriting', cursive; transform: rotate(-2deg); display: inline-block;">
+                        Gabrielplux
+                    </p>
+                    <div class="mt-1">
+                        <p class="text-xs font-mono bg-black text-white px-2 py-1 inline-block">CREDENCIAL: V-1.004.36450</p>
+                        <p class="text-xs font-mono text-gray-600 mt-1">Autor de este expediente digital.</p>
+                    </div>
+                </div>
+                
+                <div class="absolute right-4 bottom-2 opacity-40 transform rotate-[15deg] pointer-events-none">
+                    <div class="border-4 border-green-800 text-green-800 p-2 text-xl font-bold uppercase tracking-widest rounded-sm" style="mix-blend-mode: multiply;">
+                        Autor
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- Cierre .folder -->
+    </div> <!-- Cierre #regalo-wrapper -->
+
+    <script>
+        /* --- 1. CONFIGURACIÓN Y DICCIONARIOS DE EASTER EGGS --- */
+        const EASTER_EGGS = {
+            'tesla': { id: '10071856', action: () => animaciones.rayo() },
+            '404': { id: '00000000', action: () => animaciones.error404() },
+            'matrix': { id: '01100101', action: () => animaciones.matrix('') },
+            'gabrielplusx': { id: '30052006', action: () => animaciones.matrix('¿Quien es Gabrielplusx?') },
+            'gabrieplusx': { id: '30052006', action: () => animaciones.matrix('¿Quien es Gabrielplusx?') },
+            'neo': { id: '00000001', action: () => animaciones.matrix('WAKE UP, Neo...') },
+            'mr robot': { id: '01010101', action: () => animaciones.matrix('HELLO, FRIEND...') },
+            'elliot alderson': { id: '01010101', action: () => animaciones.matrix('HELLO, FRIEND...') },
+            'asesino de la trinidad': { id: '04042009', action: () => animaciones.martillo() },
+            'dexter morgan': { id: '01102006', action: () => animaciones.sangre(false) }, 
+            'asesino en serie': { id: '01102006', action: () => animaciones.sangre(false) },
+            'ted bundy': { id: '01102006', action: () => animaciones.sangre(false) },
+            'serial killer': { id: '01102006', action: () => animaciones.sangre(false) },
+            'masacre': { id: '01102006', action: () => animaciones.sangre(false) },
+            'comunismo': { id: '01102006', action: () => animaciones.sangre(false) },
+            'brian moser': { id: '30112006', action: () => animaciones.hieloYSangre() },
+            'ice truck killer': { id: '30112006', action: () => animaciones.hieloYSangre() },
+            'asesino del camion de hielo': { id: '30112006', action: () => animaciones.hieloYSangre() },
+            'tom rangel': { id: 'M30W-C4T', action: () => animaciones.gato() },
+            'negative': { id: 'N3G4T1V3', action: () => animaciones.invertirColores() }
+        };
+
+        const CLEARANCE_LEVELS = ['ALTO SECRETO', 'CONFIDENCIAL', 'RESTRINGIDO', 'PÚBLICO-LIMITADO'];
+
+        /* --- 2. REFERENCIAS AL DOM (Ajustado al Wrapper) --- */
+        const DOM = {
+            wrapper: document.getElementById('regalo-wrapper'),
+            userName: document.getElementById('userName'),
+            userId: document.getElementById('userId'),
+            clearanceLevel: document.getElementById('clearanceLevel'),
+            systemMessage: document.getElementById('systemMessage'),
+            lightning: document.getElementById('lightning-overlay'),
+            blood: document.getElementById('blood-overlay'),
+            hammer: document.getElementById('hammer-overlay'),
+            error404: document.getElementById('error-404-overlay'),
+            freeze: document.getElementById('freeze-overlay'),
+            splatterContainer: document.getElementById('splatter-container'),
+            matrixCanvas: document.getElementById('matrix-canvas'),
+            currentDate: document.getElementById('currentDate'),
+            captureArea: document.getElementById('capture-area')
+        };
+
+        function actualizarReloj() {
+            const ahora = new Date();
+            DOM.currentDate.textContent = ahora.toLocaleString('es-VE', {
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+            }) + ' HRS';
+        }
+        actualizarReloj();
+        setInterval(actualizarReloj, 1000);
+
+        let timers = { typing: null, timeouts: [] };
+
+        function limpiarPantalla() {
+            if (timers.typing) clearInterval(timers.typing);
+            timers.timeouts.forEach(clearTimeout);
+            timers.timeouts = [];
+            
+            // Aplicamos clases al wrapper en lugar del body
+            DOM.wrapper.classList.remove('shake-active', 'heavy-shake-active', 'glitch-active', 'inverted-colors');
+            DOM.lightning.classList.remove('active');
+            DOM.blood.classList.remove('active');
+            DOM.hammer.classList.remove('active');
+            DOM.freeze.classList.remove('active');
+            DOM.error404.classList.remove('active');
+            DOM.splatterContainer.innerHTML = ''; 
+            
+            if (window.matrixInterval) {
+                clearInterval(window.matrixInterval);
+                window.matrixInterval = null;
+                DOM.matrixCanvas.classList.remove('active');
+            }
+        }
+
+        function generarIdPorSistema(texto) {
+            const ua = navigator.userAgent.toLowerCase();
+            const aleatorio = (max, min = 0) => Math.floor(Math.random() * (max - min + 1)) + min;
+            const pad5 = () => aleatorio(99999).toString().padStart(5, '0');
+
+            if (texto.includes('linux')) return '17091991'; 
+            if (ua.includes('android')) return (aleatorio(1) ? '8' : '9') + (aleatorio(1) ? '8' : '9') + 'G' + pad5();
+            if (ua.includes('linux')) return aleatorio(5,1).toString() + aleatorio(5,1).toString() + aleatorio(5,1).toString() + pad5();
+            if (ua.includes('windows')) return '0' + (aleatorio(1) ? '6' : '7') + (aleatorio(1) ? '6' : '7') + pad5();
+            
+            return aleatorio(99999999).toString().padStart(8, '0'); 
+        }
+
+        window.generarId = function() {
+            limpiarPantalla();
+            const userName = DOM.userName.value.trim().toLowerCase();
+            let finalId = '';
+
+            if (EASTER_EGGS[userName]) {
+                finalId = EASTER_EGGS[userName].id;
+                EASTER_EGGS[userName].action(); 
+            } else {
+                finalId = generarIdPorSistema(userName);
+            }
+            animaciones.escribirId(finalId);
+        };
+
+        const animaciones = {
+            escribirId: (id) => {
+                const nivel = CLEARANCE_LEVELS[Math.floor(Math.random() * CLEARANCE_LEVELS.length)];
+                DOM.userId.value = '';
+                DOM.clearanceLevel.textContent = '';
+                
+                let i = 0;
+                timers.typing = setInterval(() => {
+                    if (i < id.length) {
+                        DOM.userId.value += id.charAt(i++);
+                    } else {
+                        clearInterval(timers.typing);
+                        DOM.clearanceLevel.textContent = `NIVEL DE ACCESO ASIGNADO: ${nivel}`;
+                        DOM.userId.dataset.nivel = nivel; 
+                    }
+                }, 30); 
+            },
+
+            rayo: () => {
+                void DOM.lightning.offsetWidth; 
+                DOM.lightning.classList.add('active');
+            },
+
+            sangre: (pantallaCompleta = true, sacudidaBrutal = false) => {
+                // Temblor en el wrapper aislado
+                DOM.wrapper.classList.add(sacudidaBrutal ? 'heavy-shake-active' : 'shake-active');
+                
+                if (pantallaCompleta) {
+                    void DOM.blood.offsetWidth;
+                    DOM.blood.classList.add('active');
+                }
+                
+                const fragment = document.createDocumentFragment();
+                const numGotas = sacudidaBrutal ? 100 : 60;
+
+                for(let j = 0; j < numGotas; j++) {
+                    let splat = document.createElement('div');
+                    let size = Math.random() * (sacudidaBrutal ? 150 : 100) + (sacudidaBrutal ? 40 : 30);
+                    splat.className = 'blood-splatter';
+                    splat.style.cssText = `
+                        width: ${size}px; height: ${size}px;
+                        left: ${Math.random() * 100}%; top: ${Math.random() * 100}%;
+                        border-radius: ${Math.random()*50+25}% ${Math.random()*50+25}% ${Math.random()*50+25}% ${Math.random()*50+25}% / ${Math.random()*50+25}% ${Math.random()*50+25}% ${Math.random()*50+25}% ${Math.random()*50+25}%;
+                    `;
+                    fragment.appendChild(splat);
+                }
+                DOM.splatterContainer.appendChild(fragment);
+
+                setTimeout(() => {
+                    Array.from(DOM.splatterContainer.children).forEach((gota) => {
+                        setTimeout(() => {
+                            gota.style.opacity = '0.9';
+                            gota.style.transform = 'scale(1)';
+                        }, Math.random() * (sacudidaBrutal ? 150 : 400)); 
+                    });
+                }, sacudidaBrutal ? 20 : 50);
+
+                timers.timeouts.push(setTimeout(() => {
+                    DOM.wrapper.classList.remove('shake-active', 'heavy-shake-active');
+                }, sacudidaBrutal ? 1000 : 6000));
+            },
+
+            martillo: () => {
+                void DOM.hammer.offsetWidth;
+                DOM.hammer.classList.add('active');
+                
+                timers.timeouts.push(setTimeout(() => {
+                    animaciones.sangre(false, true); 
+                }, 280));
+
+                timers.timeouts.push(setTimeout(() => DOM.hammer.classList.remove('active'), 800));
+            },
+
+            error404: () => {
+                void DOM.error404.offsetWidth;
+                DOM.error404.classList.add('active');
+            },
+
+            hieloYSangre: () => {
+                // Activar capa de congelamiento
+                void DOM.freeze.offsetWidth;
+                DOM.freeze.classList.add('active');
+                
+                // Esperar 1.5s antes de que caiga la sangre (efecto Dexter)
+                timers.timeouts.push(setTimeout(() => {
+                    animaciones.sangre(false, false); 
+                    
+                    // Retirar el congelamiento tras unos segundos adicionales
+                    timers.timeouts.push(setTimeout(() => {
+                        DOM.freeze.classList.remove('active');
+                    }, 2000));
+                }, 1500)); 
+            },
+
+            matrix: (mensajeCentral) => {
+                DOM.wrapper.classList.add('glitch-active');
+                if (mensajeCentral !== '') DOM.wrapper.classList.add('shake-active');
+                
+                timers.timeouts.push(setTimeout(() => {
+                    DOM.matrixCanvas.classList.add('active');
+                    const ctx = DOM.matrixCanvas.getContext('2d', { alpha: false }); 
+                    
+                    DOM.matrixCanvas.width = window.innerWidth;
+                    DOM.matrixCanvas.height = window.innerHeight;
+                    
+                    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ｱｲｳｴｵｶｷｸｹｺ'.split('');
+                    const fontSize = window.innerWidth < 600 ? 14 : 18; 
+                    const columnas = Math.floor(DOM.matrixCanvas.width / fontSize);
+                    const gotas = new Float32Array(columnas).fill(0).map(() => Math.random() * -50);
+
+                    function dibujarMatrix() {
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                        ctx.fillRect(0, 0, DOM.matrixCanvas.width, DOM.matrixCanvas.height);
+                        ctx.font = fontSize + 'px monospace';
+                        
+                        for(let i = 0; i < gotas.length; i++) {
+                            if (gotas[i] * fontSize > 0) {
+                                const texto = caracteres[Math.floor(Math.random() * caracteres.length)];
+                                ctx.fillStyle = '#0F0';
+                                ctx.fillText(texto, i * fontSize, (gotas[i] - 1) * fontSize);
+                                ctx.fillStyle = '#FFF';
+                                ctx.fillText(texto, i * fontSize, gotas[i] * fontSize);
+                            }
+                            if(gotas[i] * fontSize > DOM.matrixCanvas.height && Math.random() > 0.975) gotas[i] = 0;
+                            gotas[i]++;
+                        }
+
+                        if (mensajeCentral) {
+                            ctx.fillStyle = '#0F0';
+                            ctx.font = 'bold 30px Courier New'; 
+                            ctx.textAlign = 'center';
+                            ctx.fillText(mensajeCentral, DOM.matrixCanvas.width / 2, DOM.matrixCanvas.height / 2);
+                            ctx.textAlign = 'left';
+                        }
+                    }
+                    
+                    if(!window.matrixInterval) window.matrixInterval = setInterval(dibujarMatrix, 50); 
+                    
+                    timers.timeouts.push(setTimeout(() => {
+                        DOM.wrapper.classList.remove('glitch-active', 'shake-active');
+                        timers.timeouts.push(setTimeout(() => {
+                            DOM.matrixCanvas.classList.remove('active');
+                            timers.timeouts.push(setTimeout(() => {
+                                clearInterval(window.matrixInterval);
+                                window.matrixInterval = null;
+                            }, 500));
+                        }, 4000));
+                    }, 450));
+                }, 300));
+            },
+
+            gato: () => {
+                const fragment = document.createDocumentFragment();
+                // Coordenadas que cruzan la carpeta diagonalmente
+                const walkingPath = [
+                    {x: 10, y: 75}, {x: 25, y: 65}, {x: 40, y: 55}, 
+                    {x: 55, y: 45}, {x: 70, y: 35}, {x: 85, y: 25}
+                ];
+
+                walkingPath.forEach((pos, index) => {
+                    let paw = document.createElement('div');
+                    paw.className = 'cat-paw';
+                    paw.style.left = `${pos.x}%`;
+                    paw.style.top = `${pos.y}%`;
+                    paw.style.animationDelay = `${index * 0.4}s`;
+                    
+                    // Alterna ligeramente la pata izquierda y derecha y la rotación para darle naturalidad
+                    const offset = index % 2 === 0 ? -15 : 15; 
+                    const rotation = 55; // Ángulo caminando hacia arriba a la derecha
+                    
+                    paw.innerHTML = `<svg style="transform: rotate(${rotation}deg) translate(${offset}px, 0)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M226.5 92.9c14.3 7.3 28.9 22.9 32.8 44.3c2.5 13.6-5 28.6-17.6 37.1c-16.8 11.3-41.4 17.8-67.1 17.8c-29.4 0-50.8-5.1-66.3-17.3c-11.2-8.8-17-23.7-12.9-37.3c7.7-25.6 28.2-39.2 41.5-44.5c16.3-6.5 31.8-10.4 46.1-10.4c16 0 31.5 4.3 43.5 10.3zM32 232c-17.7 0-32-14.3-32-32c0-30.7 13.5-56.3 32-72c15.8-13.4 36-24 56-24c17.7 0 32 14.3 32 32c0 30.7-13.5 56.3-32 72c-15.8 13.4-36 24-56 24zm144 264c-22.1 0-42.3-10.7-54.6-28.4c-9.5-13.6-14.8-29.4-17-45.7c-4-29.9 8.2-57.9 31.5-74.1c19.1-13.3 43-20.9 69-20.9c25.4 0 48.9 7.3 67.8 20.3c22.6 15.6 34.6 42.6 31 71.3c-2.3 17.8-8.4 35.1-19.1 49.9C273.8 485.4 251.1 496 228 496c-17.3 0-35.3-4.5-52-10zM352 104c20 0 40.2 10.6 56 24c18.5 15.7 32 41.3 32 72c0 17.7-14.3 32-32 32c-20 0-40.2-10.6-56-24c-18.5-15.7-32-41.3-32-72c0-17.7 14.3-32 32-32zm128 96c0 17.7-14.3 32-32 32c-20 0-40.2-10.6-56-24c-18.5-15.7-32-41.3-32-72c0-17.7 14.3-32 32-32c20 0 40.2 10.6 56 24c18.5 15.7 32 41.3 32 72z"/></svg>`;
+                    fragment.appendChild(paw);
+                });
+                DOM.splatterContainer.appendChild(fragment);
+            },
+
+            invertirColores: () => {
+                DOM.wrapper.classList.add('inverted-colors');
+            }
+        };
+
+        window.validarAcceso = function() {
+            const userName = DOM.userName.value.trim().toUpperCase();
+            const userId = DOM.userId.value.trim();
+            const msgBox = DOM.systemMessage;
+
+            msgBox.className = "mt-6 text-center font-mono font-bold text-sm h-8";
+
+            if (!userName || !userId) {
+                msgBox.textContent = `[!] ERROR: ${!userName ? 'IDENTIDAD' : 'ID DE AUTORIZACIÓN'} REQUERIDA.`;
+                msgBox.classList.add("text-red-600");
+                return;
+            }
+
+            msgBox.innerHTML = `PROCESANDO CAPTURA DE CREDENCIAL <span class="animate-pulse">...</span>`;
+            msgBox.classList.add("text-blue-800");
+
+            setTimeout(() => {
+                if (typeof html2canvas === 'undefined') {
+                    msgBox.textContent = "[!] ERROR: HERRAMIENTA DE CAPTURA NO DISPONIBLE.";
+                    msgBox.className = "mt-6 text-center font-mono font-bold text-sm h-8 text-red-600";
+                    return;
+                }
+                
+                html2canvas(DOM.captureArea, {
+                    backgroundColor: null, 
+                    scale: window.devicePixelRatio || 1, 
+                    logging: false, 
+                    allowTaint: true,
+                    useCORS: true
+                }).then(canvas => {
+                    requestAnimationFrame(() => {
+                        const link = document.createElement('a');
+                        link.download = `Sombra_ID_${userName.replace(/\s+/g, '_')}.png`;
+                        link.href = canvas.toDataURL('image/png', 0.8); 
+                        link.click();
+                        
+                        msgBox.textContent = `[CAPTURA PNG DESCARGADA EXITOSAMENTE]`;
+                        msgBox.className = "mt-6 text-center font-mono font-bold text-sm h-8 text-green-700";
+                    });
+                }).catch(() => {
+                    msgBox.textContent = `[!] ERROR AL GENERAR CAPTURA.`;
+                    msgBox.className = "mt-6 text-center font-mono font-bold text-sm h-8 text-red-600";
+                });
+            }, 100);
+        };
+
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+            const expectedKey = konamiCode[konamiIndex].length === 1 ? konamiCode[konamiIndex].toLowerCase() : konamiCode[konamiIndex];
+
+            if (key === expectedKey) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    window.location.href = 'https://github.com/thegabrielplusx/cifradordeGabrielplusx';
+                    konamiIndex = 0; 
+                }
+            } else {
+                konamiIndex = (key === (konamiCode[0].length === 1 ? konamiCode[0].toLowerCase() : konamiCode[0])) ? 1 : 0;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+/* styles.css */
+:root {
+    --manila-bg: #f4ebd0;
+    --manila-dark: #e3d5b0;
+    --ink-color: #1a1a1a;
+    --stamp-red: #c92a2a;
+}
+
+body {
+    background-color: #111;
+    background-image: url('walpaper.webp'); /* Reemplaza con tu URL */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--ink-color);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    min-height: 100vh;
+}
+
+.folder {
+    background-color: var(--manila-bg);
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 
+                inset 0 0 40px rgba(0,0,0,0.05);
+    border-radius: 4px;
+    position: relative;
+    max-width: 900px;
+    width: 100%;
+    margin-top: 3rem;
+    padding: 3rem;
+}
+
+.typewriter-text {
+    text-shadow: 0px 0px 1px rgba(0,0,0,0.3);
+    line-height: 1.6;
+}
+
+.stamp-declassified {
+    color: var(--stamp-red);
+    border: 4px solid var(--stamp-red);
+    padding: 0.5rem 1rem;
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    transform: rotate(-8deg);
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    opacity: 0.85;
+    letter-spacing: 0.15em;
+    outline: 2px solid var(--stamp-red);
+    outline-offset: 4px;
+    mix-blend-mode: multiply;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.censor-bar {
+    background-color: #000;
+    color: #000;
+    padding: 0 0.4em;
+    margin: 0 0.1em;
+    user-select: none;
+    transition: color 0.3s ease;
+    cursor: crosshair;
+}
+
+.censor-bar:hover {
+    color: #fff;
+}
+
+.coffee-stain {
+    position: absolute;
+    width: 150px;
+    height: 140px;
+    border-radius: 50%;
+    border: 4px solid rgba(101, 67, 33, 0.15);
+    border-top-color: rgba(101, 67, 33, 0.3);
+    border-left-color: rgba(101, 67, 33, 0.05);
+    background: radial-gradient(circle, transparent 50%, rgba(101, 67, 33, 0.05) 100%);
+    box-shadow: inset 0 0 10px rgba(101, 67, 33, 0.05);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    z-index: 5;
+}
+
+.stain-1 { top: -20px; left: -30px; transform: rotate(45deg); }
+.stain-2 { bottom: 40px; right: 20px; width: 100px; height: 95px; border-width: 3px; opacity: 0.7; }
+
+.tabs-container {
+    display: flex;
+    position: absolute;
+    top: -46px;
+    left: 10px;
+    z-index: 0;
+}
+
+.folder-tab {
+    background-color: var(--manila-dark);
+    padding: 12px 24px;
+    margin-right: 4px;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-bottom: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: inset 0 10px 10px -10px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+}
+
+.folder-tab.active {
+    background-color: var(--manila-bg);
+    height: 48px;
+    margin-top: -2px;
+    border-top: 2px solid rgba(0,0,0,0.15);
+    box-shadow: none;
+    z-index: 20;
+    position: relative;
+}
+
+.folder-tab:hover:not(.active) {
+    background-color: #d8c89d;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.official-divider {
+    border-top: 2px dashed #444;
+    margin: 1.5rem 0;
+    opacity: 0.5;
+}
+
+.mugshot {
+    filter: grayscale(100%) contrast(120%) brightness(90%);
+    border: 1px solid #333;
+    padding: 4px;
+    background: #fff;
+    transform: rotate(-2deg);
+}
+
+.paper-clip {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 40px;
+    border: 3px solid #888;
+    border-radius: 10px;
+    box-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+    background: linear-gradient(90deg, #ccc, #f0f0f0, #aaa);
+    z-index: 10;
+}
+
+/* =========================================
+   MEDIA QUERIES - RESPONSIVIDAD PARA ANDROID / MÓVILES
+   ========================================= */
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem 0.5rem;
+    }
+
+    .folder {
+        padding: 1.5rem;
+        margin-top: 5rem; /* Espacio necesario para las pestañas apiladas */
+    }
+
+    .tabs-container {
+        top: auto;
+        bottom: 100%;
+        left: 0;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0 5px;
+        gap: 2px;
+    }
+
+    .folder-tab {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+        flex-grow: 1; /* Distribuye el espacio entre las pestañas */
+        text-align: center;
+        margin-right: 0;
+        border-radius: 6px 6px 0 0;
+    }
+
+    .folder-tab.active {
+        height: auto;
+        margin-top: 0;
+        padding-bottom: 8px;
+    }
+
+    /* Sobrescribir el header flex de Tailwind para móviles */
+    header .flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.8rem;
+    }
+
+    header .text-right {
+        text-align: left;
+    }
+
+    /* Redimensionar y reposicionar el sello */
+    .stamp-declassified {
+        font-size: 1.1rem;
+        padding: 0.3rem 0.6rem;
+        top: 10px;
+        right: 10px;
+        transform: rotate(-5deg);
+        border-width: 3px;
+    }
+
+    /* Ajustar las manchas de café para que no desborden ni tapen lectura */
+    .stain-1 {
+        width: 90px;
+        height: 85px;
+        top: -10px;
+        left: -10px;
+    }
+
+    .stain-2 {
+        width: 70px;
+        height: 65px;
+        bottom: 20px;
+        right: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .folder {
+        padding: 1.2rem;
+        margin-top: 5.5rem;
+    }
+
+    .folder-tab {
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+    
+    .stamp-declassified {
+        font-size: 0.85rem;
+        border-width: 2px;
+        outline-width: 1px;
+        opacity: 0.7;
+    }
+
+    .typewriter-text h1 {
+        font-size: 1.25rem;
+    }
+    
+    .typewriter-text p {
+        font-size: 0.9rem;
+    }
+}
