@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es-VE">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museo Gabriel Algoritmico de las Personalidades Digitales</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="folder">
+        <div class="coffee-stain stain-1"></div>
+        <div class="coffee-stain stain-2"></div>
+        <div class="stamp-declassified">DESCLASIFICADO</div>
+
+        <div class="tabs-container">
+            <button class="folder-tab" onclick="window.location.href='index.html'">Inicio</button>
+            <button class="folder-tab" onclick="window.location.href='expedientes.html'">Expedientes</button>
+            <button class="folder-tab active" onclick="window.location.href='museo.html'">Museo</button>
+            <button class="folder-tab" onclick="window.location.href='regalo.html'">Regalos</button>
+        </div>
+
+        <header class="mb-8 border-b-2 border-black pb-4 typewriter-text">
+            <div class="flex justify-between items-end">
+                <div>
+                    <h1 class="text-xl font-bold">CARACAS-REPÚBLICA de VENEZUELA</h1>
+                </div>
+                <div class="text-right text-sm">
+                    <p><strong>NIVEL DE ACCESO:</strong> <span class="censor-bar">ALTO SECRETO</span></p>
+                    <p><strong>FECHA DE REPORTE:</strong>30/05/2006</p>
+                    <p><strong>CÓDIGO:</strong> 17-Septiembre-1991</p>
+                    <p><strong>AGENTE:</strong> <span class="censor-bar">Gabrielplusx</span></p>
+                </div>
+            </div>
+        </header>
+
+        <div id="museo" class="tab-content active typewriter-text">
+            <h2 class="text-2xl font-bold mb-4 underline">MUSEO Digital</h2>
+            <p class="mb-6 text-sm">Esta es la zona del museo digital a los desarollo más importantes al mundo del mundo.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <img src="prisma.webp" alt="prisma" class="mx-auto border-4 border-white shadow-md transform rotate-2">
+                    <p class="mt-2 font-bold text-sm">Poyecto Prisma</p>
+                    <p class="text-xs">El Proyecto PRISM fue un programa de vigilancia masiva ejecutado por la Agencia de Seguridad Nacional de los Estados Unidos. Comenzó en 2007. Su propósito era exacto: extraer datos de las empresas de tecnología más grandes del mundo. Correos electrónicos, historiales de búsqueda, transferencias de archivos y chats. Recolectaban la rutina diaria de millones de personas de forma sistemática y sin autorización judicial individual.</p>
+                </div>
+                <div class="text-center">
+                    <img src="spacex.webp" alt="spacex" class="mx-auto border-4 border-white shadow-md transform -rotate-1">
+                    <p class="mt-2 font-bold text-sm">SpaceX</p>
+                    <p class="text-xs"> SpaceX es una corporación aeroespacial privada fundada en 2002. Su función operativa es la fabricación y lanzamiento de cohetes reutilizables. Su objetivo documentado es facilitar la colonización interplanetaria.La importancia de su aparición radica en que eliminó el monopolio gubernamental de Estados unidos sobre el acceso al espacio. Probaron de forma empírica que la primera etapa de un cohete orbital puede aterrizar intacta tras su lanzamiento. Esta ejecución alteró permanentemente la economía de la industria, transformando un procedimiento que antes era desechable y destructivo en un sistema calculable, cíclico y eficiente.</p>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="mt-12 pt-8 border-t-2 border-dashed border-[#888] flex flex-col sm:flex-row items-center sm:items-start gap-6 relative">
+            <div class="relative transform rotate-[-4deg] shrink-0 mt-2">
+                <div class="paper-clip" style="top: -12px;"></div>
+                <a href="https://github.com/thegabrielplusx">
+                <img src="autor.webp" alt="Foto del Autor" class="w-24 h-24 object-cover border-4 border-white shadow-lg filter grayscale contrast-125">
+                </a>
+            </div>
+            
+            <div class="text-center sm:text-left z-10">
+                <h4 class="font-bold text-xs text-[#555] uppercase tracking-widest mb-1">Investigador Asignado</h4>
+                <p class="text-4xl font-bold text-blue-900 my-2" style="font-family: 'Brush Script MT', 'Lucida Handwriting', cursive; transform: rotate(-2deg); display: inline-block;">
+                    Gabrielplux
+                </p>
+                <div class="mt-1">
+                    <p class="text-xs font-mono bg-black text-white px-2 py-1 inline-block">CREDENCIAL: V-1.004.36450</p>
+                    <p class="text-xs font-mono text-gray-600 mt-1">Autor de este expediente digital.</p>
+                </div>
+            </div>
+            <div class="absolute right-4 bottom-2 opacity-40 transform rotate-[15deg] pointer-events-none">
+                <div class="border-4 border-green-800 text-green-800 p-2 text-xl font-bold uppercase tracking-widest rounded-sm" style="mix-blend-mode: multiply;">
+                    Autor
+                </div>
+            </div>
+        </div>
+
+        <div class="official-divider mt-12"></div>
+        <a href="museo.html">
+        <p class="text-center text-xs opacity-60 font-bold">PÁGINA 3 DE 3 - SE PROHÍBE LA REPRODUCCIÓN NO AUTORIZADA</p>
+        </a>
+    </div>
+    <script src="logica.js"></script>
+</body>
+</html>
