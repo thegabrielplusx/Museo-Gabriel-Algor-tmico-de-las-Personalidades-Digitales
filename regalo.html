@@ -1,306 +1,517 @@
+
+<!-- PASO 1: Importes y Definiciones -->
 <!DOCTYPE html>
 <html lang="es-VE">
 <head>
+    <!-- Configuracion basica de vista para dispositivos moviles -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Museo Gabriel Algoritmico de las Personalidades Digitales</title>
     
-    <!-- LIBRERÍAS EXTERNAS -->
+    <!-- Importacion de Tailwind para utilidades de estilos rapidos -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     
     <style>
-        /* Se ha encapsulado todo en #regalo-wrapper para evitar colisiones de CSS */
-        #regalo-wrapper {
-            --manila-bg: #f4ebd0;
-            --manila-dark: #e3d5b0;
-            --ink-color: #1a1a1a;
-            --stamp-red: #c92a2a;
-
+        /* Estilos encapsulados para no chocar con otros elementos */
+        #envoltura_regalo {
+            --fondo_manila: #f4ebd0;
+            --oscuro_manila: #e3d5b0;
+            
+            /* Colores tematicos para la interfaz general del documento */
+            --color_tinta: #1a1a1a;
+            --rojo_sello: #c92a2a;
             background-color: #111;
+            
+            /* Imagen de fondo fija para dar ambiente visual */
             background-image: url('walpaer.webp'); 
             background-size: cover;
             background-position: center;
+            
+            /* Flexbox para centrar todo el contenido verticalmente */
             background-attachment: fixed;
             background-repeat: no-repeat;
             font-family: 'Courier New', Courier, monospace;
-            color: var(--ink-color);
             
+            /* Control de color fuente y posicionamiento central */
+            color: var(--color_tinta);
             display: flex;
             flex-direction: column;
             justify-content: center;
+            
+            /* Espaciado interno y transicion de color de fondo */
             align-items: center;
             padding: 2rem 1rem;
             min-height: 100vh;
             margin: 0;
+            
+            /* Contexto seguro para esconder desbordamientos y animaciones */
             overflow-x: hidden;
-            position: relative; /* Contexto de contención */
+            position: relative; 
             transition: background-color 1.5s ease;
         }
 
-        #regalo-wrapper .folder {
-            background-color: var(--manila-bg);
+        /* Estilo de la carpeta principal tipo expediente secreto */
+        #envoltura_regalo .carpeta_base {
+            background-color: var(--fondo_manila);
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+            
+            /* Sombra y bordes redondeados para aspecto fisico realista */
             box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.7);
             border-radius: 4px;
             position: relative;
+            
+            /* Dimensiones maximas y espaciado interior de la carpeta */
             max-width: 600px;
             width: 100%;
             padding: 3rem;
+            
+            /* Mejora de rendimiento visual para transformaciones CSS fluidas */
             will-change: transform;
             margin-top: 2rem;
         }
 
-        #regalo-wrapper .tabs-container {
+        /* Contenedor de las pestanas de navegacion en parte superior */
+        #envoltura_regalo .contenedor_pestanas {
             position: absolute;
             top: -34px;
             left: 20px;
+            
+            /* Distribucion horizontal alineada de todos los botones */
             display: flex;
             gap: 5px;
         }
 
-        #regalo-wrapper .folder-tab {
-            background-color: var(--manila-dark);
+        /* Diseno individual de cada boton de pestana navegable */
+        #envoltura_regalo .pestana_carpeta {
+            background-color: var(--oscuro_manila);
             border: none;
             padding: 8px 24px;
+            
+            /* Bordes redondeados solo en la parte superior del tab */
             border-radius: 8px 8px 0 0;
             font-family: inherit;
             font-weight: bold;
+            
+            /* Interactividad y transiciones suaves al pasar el mouse */
             cursor: pointer;
             color: #333;
             text-transform: uppercase;
+            
+            /* Tamano de letra y sombreado inferior de separacion */
             font-size: 0.9rem;
             box-shadow: 0 -3px 5px rgba(0,0,0,0.1);
             transition: all 0.2s ease;
         }
 
-        #regalo-wrapper .folder-tab:hover {
-            background-color: var(--manila-bg);
-            color: var(--ink-color);
+        /* Efecto de activacion hover para iluminar la pestana */
+        #envoltura_regalo .pestana_carpeta:hover {
+            background-color: var(--fondo_manila);
+            color: var(--color_tinta);
         }
 
-        #regalo-wrapper .typewriter-text {
+        /* Tipografia estilo antigua de maquina de escribir clasica */
+        #envoltura_regalo .texto_maquina {
             text-shadow: 0px 0px 1px rgba(0,0,0,0.2);
             line-height: 1.6;
         }
 
-        #regalo-wrapper .stamp-restricted {
-            color: var(--stamp-red);
-            border: 4px solid var(--stamp-red);
+        /* Estilo visual del sello rojo diagonal de acceso denegado */
+        #envoltura_regalo .sello_restringido {
+            color: var(--rojo_sello);
+            border: 4px solid var(--rojo_sello);
             padding: 0.5rem 1rem;
+            
+            /* Tamano de fuente impactante con rotacion de sello real */
             font-size: 1.8rem;
             font-weight: 900;
             text-transform: uppercase;
             transform: rotate(-5deg);
+            
+            /* Posicion absoluta fija en la esquina superior derecha */
             position: absolute;
             top: 2rem;
             right: 1rem;
             opacity: 0.85;
+            
+            /* Letras separadas y doble borde para realismo del tampon */
             letter-spacing: 0.1em;
-            outline: 2px solid var(--stamp-red);
+            outline: 2px solid var(--rojo_sello);
             outline-offset: 4px;
+            
+            /* Fusion con el fondo y desactivacion de eventos clic */
             mix-blend-mode: multiply;
             z-index: 10;
             pointer-events: none;
         }
 
-        #regalo-wrapper .coffee-stain {
+        /* Manchas circulares falsas imitando tazas de cafe viejo */
+        #envoltura_regalo .mancha_cafe {
             position: absolute;
             width: 150px;
             height: 140px;
+            
+            /* Bordes irregulares semitransparentes simulando liquido ya secado */
             border-radius: 50%;
             border: 4px solid rgba(101, 67, 33, 0.15);
             background: rgba(101, 67, 33, 0.03);
+            
+            /* Superposicion sin bloquear botones usando blend mode multiply */
             pointer-events: none;
             mix-blend-mode: multiply;
             z-index: 5;
         }
 
-        #regalo-wrapper .stain-1 { top: -20px; left: -30px; transform: rotate(45deg); border-top-color: rgba(101, 67, 33, 0.25); }
-        #regalo-wrapper .stain-2 { bottom: 20px; right: 20px; width: 100px; height: 95px; border-width: 3px; opacity: 0.7; }
-
-        #regalo-wrapper .official-divider { border-top: 2px dashed #444; margin: 1.5rem 0; opacity: 0.5; }
-        #regalo-wrapper input::placeholder { color: rgba(0,0,0,0.4); font-style: italic; }
+        /* Posicionamiento especifico esquina superior de la mancha numero uno */
+        #envoltura_regalo .mancha_1 { 
+            top: -20px; left: -30px; 
+            transform: rotate(45deg); 
+            border-top-color: rgba(101, 67, 33, 0.25); 
+        }
         
-        #regalo-wrapper .paper-clip {
+        /* Posicionamiento especifico esquina inferior de la mancha numero dos */
+        #envoltura_regalo .mancha_2 { 
+            bottom: 20px; right: 20px; 
+            width: 100px; height: 95px; 
+            border-width: 3px; opacity: 0.7; 
+        }
+
+        /* Linea divisoria punteada oficial para estilo de formulario impreso */
+        #envoltura_regalo .divisor_oficial { border-top: 2px dashed #444; margin: 1.5rem 0; opacity: 0.5; }
+        
+        /* Color semitransparente del texto de fondo en inputs texto */
+        #envoltura_regalo input::placeholder { color: rgba(0,0,0,0.4); font-style: italic; }
+        
+        /* Estilo realista de metal para el clip sujetador falso */
+        #envoltura_regalo .clip_papel {
             position: absolute;
             width: 14px;
             height: 40px;
+            
+            /* Bordes grises curvados simulando el alambre doblado continuo */
             border: 2px solid #777;
             border-radius: 10px;
             z-index: 10;
+            
+            /* Centrado exacto horizontal justo por encima de la foto */
             left: 50%;
             transform: translateX(-50%);
             background: transparent;
+            
+            /* Sombras interiores y exteriores para dar volumen tridimensional */
             box-shadow: 2px 2px 3px rgba(0,0,0,0.4), inset 1px 1px 2px rgba(255,255,255,0.5);
             border-bottom: 2px solid #555;
             border-right: 2px solid #555;
         }
 
+        /* Ajustes responsivos adaptativos para pantallas de telefonos pequenos */
         @media (max-width: 480px) {
-            #regalo-wrapper .folder { padding: 1.5rem; }
-            #regalo-wrapper .stamp-restricted { font-size: 1.2rem; border-width: 3px; top: 1rem; }
-            #regalo-wrapper .tabs-container { top: -32px; left: 10px; }
-            #regalo-wrapper .folder-tab { padding: 6px 16px; font-size: 0.8rem; }
+            #envoltura_regalo .carpeta_base { padding: 1.5rem; }
+            
+            /* Reduccion proporcional del sello rojo para evitar desbordamiento */
+            #envoltura_regalo .sello_restringido { font-size: 1.2rem; border-width: 3px; top: 1rem; }
+            #envoltura_regalo .contenedor_pestanas { top: -32px; left: 10px; }
+            
+            /* Pestanas un poco mas pequenas encajando en el movil */
+            #envoltura_regalo .pestana_carpeta { padding: 6px 16px; font-size: 0.8rem; }
         }
 
-        /* 3.1: Rayo (Lightning) */
-        @keyframes thunder-strike { 0%, 20%, 40%, 100% { opacity: 0; } 10%, 30% { opacity: 1; } 50% { opacity: 0.8; } }
-        #regalo-wrapper .lightning { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; background-color: white; opacity: 0; will-change: opacity; }
-        #regalo-wrapper .lightning.active { animation: thunder-strike 0.7s ease-out; }
-
-        /* 3.2: Temblores de Pantalla */
-        @keyframes shake-screen { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(-3px, 3px) rotate(-1deg); } 50% { transform: translate(3px, -3px) rotate(1deg); } 75% { transform: translate(-3px, -3px) rotate(-1deg); } }
-        #regalo-wrapper.shake-active { animation: shake-screen 0.1s infinite; }
+        /* Animacion veloz de flash blanco simulando impacto de rayo */
+        @keyframes golpe_trueno { 
+            0%, 20%, 40%, 100% { opacity: 0; } 
+            10%, 30% { opacity: 1; } 
+            50% { opacity: 0.8; } 
+        }
         
-        @keyframes heavy-shake { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 10% { transform: translate(-10px, 10px) rotate(-3deg); } 20% { transform: translate(10px, -10px) rotate(3deg); } 30% { transform: translate(-15px, -5px) rotate(-2deg); } 40% { transform: translate(15px, 5px) rotate(2deg); } 50% { transform: translate(-10px, 15px) rotate(-4deg); } 60% { transform: translate(10px, -15px) rotate(4deg); } 70% { transform: translate(-15px, 5px) rotate(-1deg); } 80% { transform: translate(15px, -5px) rotate(1deg); } 90% { transform: translate(-5px, -10px) rotate(0deg); } }
-        #regalo-wrapper.heavy-shake-active { animation: heavy-shake 0.1s infinite; }
+        /* Capa superpuesta fija que ejecuta el relampago tapando todo */
+        #envoltura_regalo .relampago { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            pointer-events: none; z-index: 9999; background-color: white; 
+            opacity: 0; will-change: opacity; 
+        }
+        #envoltura_regalo .relampago.activo { animation: golpe_trueno 0.7s ease-out; }
 
-        /* 3.3: Efecto Glitch */
-        @keyframes glitch-effect { 0%, 40%, 80%, 100% { transform: translate(0); filter: invert(0); } 20% { transform: translate(-3px, 3px); filter: invert(0.2); } 60% { transform: translate(3px, 3px); filter: invert(0.8) hue-rotate(90deg); } }
-        #regalo-wrapper.glitch-active { animation: glitch-effect 0.15s 3; }
-
-        /* 4.1: Sangre */
-        #regalo-wrapper .blood-splatter { position: absolute; background-color: #610000; mix-blend-mode: multiply; opacity: 0; transform: scale(0); transition: transform 0.1s ease-out, opacity 0.1s ease-out; pointer-events: none; z-index: 20; will-change: transform, opacity; }
-        #regalo-wrapper .blood-screen { position: fixed; bottom: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(138, 3, 3, 0.85); z-index: 9998; pointer-events: none; transform: translateY(100%); transition: transform 6s ease-in-out; will-change: transform; }
-        #regalo-wrapper .blood-screen.active { transform: translateY(0); }
-
-        /* 4.2: Matrix */
-        #regalo-wrapper .matrix-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10000; background-color: black; opacity: 0; pointer-events: none; transition: opacity 0.5s ease-in; will-change: opacity; }
-        #regalo-wrapper .matrix-screen.active { opacity: 1; pointer-events: all; }
-
-        /* 4.4: Hielo (Ice Truck Killer) */
-        #regalo-wrapper .freeze-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, rgba(200,230,255,0.2) 0%, rgba(180,210,255,0.6) 100%); box-shadow: inset 0 0 150px rgba(255,255,255,0.9); z-index: 9997; pointer-events: none; opacity: 0; transition: opacity 1.5s ease-in; will-change: opacity; backdrop-filter: blur(2px); }
-        #regalo-wrapper .freeze-screen.active { opacity: 1; }
-
-        /* 4.3: Martillo (Asesino de la Trinidad) */
-        /* 4.6: Gato (Tom Rangel) */
-        @keyframes paw-step { 0% { opacity: 0; transform: scale(0.8); } 15% { opacity: 0.65; transform: scale(1); } 80% { opacity: 0.65; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
-        #regalo-wrapper .cat-paw { position: absolute; width: 45px; height: 45px; color: #444; z-index: 10005; pointer-events: none; opacity: 0; animation: paw-step 3.5s forwards; mix-blend-mode: multiply; }
+        /* Animacion para vibracion leve del documento al ocurrir accion */
+        @keyframes temblor_pantalla { 
+            0%, 100% { transform: translate(0, 0) rotate(0deg); } 
+            25% { transform: translate(-3px, 3px) rotate(-1deg); } 
+            50% { transform: translate(3px, -3px) rotate(1deg); } 
+            75% { transform: translate(-3px, -3px) rotate(-1deg); } 
+        }
+        #envoltura_regalo.temblor_activo { animation: temblor_pantalla 0.1s infinite; }
         
-        /* 4.7: Error 404 */
-        #regalo-wrapper .error-404-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 10010; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; color: #0F0; font-family: monospace; }
-        #regalo-wrapper .error-404-screen.active { opacity: 1; pointer-events: all; }
-        #regalo-wrapper .error-404-screen h2 { font-size: 5rem; text-shadow: 0 0 10px #0F0; }
+        /* Animacion para vibracion muy fuerte pareciendo choque o golpe duro */
+        @keyframes temblor_fuerte { 
+            0%, 100% { transform: translate(0, 0) rotate(0deg); } 
+            10% { transform: translate(-10px, 10px) rotate(-3deg); } 
+            
+            /* Movimientos bruscos erraticos calculados para mayor realismo agresivo */
+            20% { transform: translate(10px, -10px) rotate(3deg); } 
+            30% { transform: translate(-15px, -5px) rotate(-2deg); } 
+            40% { transform: translate(15px, 5px) rotate(2deg); } 
+            
+            /* Transiciones de sacudida rotando y moviendo coordenadas xy juntas */
+            50% { transform: translate(-10px, 15px) rotate(-4deg); } 
+            60% { transform: translate(10px, -15px) rotate(4deg); } 
+            
+            /* Retorno gradual y suavizado final hacia la posicion original */
+            70% { transform: translate(-15px, 5px) rotate(-1deg); } 
+            80% { transform: translate(15px, -5px) rotate(1deg); } 
+            90% { transform: translate(-5px, -10px) rotate(0deg); } 
+        }
+        #envoltura_regalo.temblor_fuerte_activo { animation: temblor_fuerte 0.1s infinite; }
 
-        /* 4.6: Invertir Colores (Negative) */
-        #regalo-wrapper.inverted-colors { filter: invert(1); transition: filter 0.8s ease; }
+        /* Efecto visual de fallo digital invirtiendo colores rapidamente corrompiendolo */
+        @keyframes efecto_falla { 
+            0%, 40%, 80%, 100% { transform: translate(0); filter: invert(0); } 
+            20% { transform: translate(-3px, 3px); filter: invert(0.2); } 
+            
+            /* Cambio de saturacion y matiz para lucir falla de GPU */
+            60% { transform: translate(3px, 3px); filter: invert(0.8) hue-rotate(90deg); } 
+        }
+        #envoltura_regalo.falla_activa { animation: efecto_falla 0.15s 3; }
 
-        /* 4.8: Banderas y Carnaval - MEJORADAS */
-        #regalo-wrapper .flag-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); z-index: 10020; opacity: 0; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none; border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-width: 80%; max-height: 80%; }
-        #regalo-wrapper .flag-overlay.active { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        /* Gotas de sangre individuales que crecen desde el centro rojo oscuro */
+        #envoltura_regalo .salpicadura_sangre { 
+            position: absolute; background-color: #610000; mix-blend-mode: multiply; 
+            opacity: 0; transform: scale(0); transition: transform 0.1s ease-out, opacity 0.1s ease-out; 
+            
+            /* Optimizado para evitar frenos de renderizado al animarse varias simultaneas */
+            pointer-events: none; z-index: 20; will-change: transform, opacity; 
+        }
         
-        @keyframes samba-bounce { 0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); } 25% { transform: translate(-50%, -50%) scale(1.05) rotate(-3deg); } 75% { transform: translate(-50%, -50%) scale(1.05) rotate(3deg); } }
-        #regalo-wrapper .flag-overlay.samba.active { animation: samba-bounce 0.4s infinite; }
-        
-        @keyframes majestic-glow { 0%, 100% { filter: drop-shadow(0 0 10px rgba(0,255,0,0.3)); } 50% { filter: drop-shadow(0 0 40px rgba(0,255,0,0.9)); } }
-        #regalo-wrapper .flag-overlay.esperanto-style.active { animation: majestic-glow 2s infinite; }
-        
-        #regalo-wrapper .confetti { position: absolute; width: 12px; height: 12px; z-index: 10015; pointer-events: none; animation: fall-confetti cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
-        @keyframes fall-confetti { 0% { transform: translate3d(0, -20px, 0) rotateX(0) rotateY(0); opacity: 1; } 100% { transform: translate3d(var(--sway), 110vh, 0) rotateX(1080deg) rotateY(720deg); opacity: 0; } }
+        /* Pantalla completa tenida de sangre subiendo lento desde zona baja */
+        #envoltura_regalo .pantalla_sangre { 
+            position: fixed; bottom: 0; left: 0; width: 100vw; height: 100vh; 
+            background-color: rgba(138, 3, 3, 0.85); z-index: 9998; 
+            
+            /* Oculto inicialmente por desplazamiento vertical con animacion muy dilatada */
+            pointer-events: none; transform: translateY(100%); transition: transform 6s ease-in-out; 
+            will-change: transform; 
+        }
+        #envoltura_regalo .pantalla_sangre.activo { transform: translateY(0); }
 
-        /* Efecto de Flash (Apoyo a Carnaval y Rayo) */
-        @keyframes flash-bang { 0% { opacity: 1; } 100% { opacity: 0; } }
-        #regalo-wrapper .flash-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: white; z-index: 10030; pointer-events: none; opacity: 0; }
-        #regalo-wrapper .flash-screen.active { animation: flash-bang 0.8s ease-out; }
+        /* Pantalla totalmente negra que sirve de base matriz terminal verde */
+        #envoltura_regalo .pantalla_codigo { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            z-index: 10000; background-color: black; opacity: 0; 
+            
+            /* Aparicion desvanecida bloqueando clics para robar enfoque temporalmente */
+            pointer-events: none; transition: opacity 0.5s ease-in; will-change: opacity; 
+        }
+        #envoltura_regalo .pantalla_codigo.activo { opacity: 1; pointer-events: all; }
+
+        /* Capa azul celeste difuminada simulando cristales de hielo enfriado */
+        #envoltura_regalo .pantalla_hielo { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            
+            /* Gradiente radial central que emula neblina densa helada inactiva */
+            background: radial-gradient(circle, rgba(200,230,255,0.2) 0%, rgba(180,210,255,0.6) 100%); 
+            box-shadow: inset 0 0 150px rgba(255,255,255,0.9); z-index: 9997; 
+            pointer-events: none; opacity: 0; transition: opacity 1.5s ease-in; 
+            will-change: opacity; backdrop-filter: blur(2px); 
+        }
+        #envoltura_regalo .pantalla_hielo.activo { opacity: 1; }
+
+        /* Animacion de huellas animales asomandose un rato antes de borrarse solas */
+        @keyframes paso_pata { 
+            0% { opacity: 0; transform: scale(0.8); } 
+            15% { opacity: 0.65; transform: scale(1); } 
+            
+            /* Permanece opaca un rato largo para seguir ruta dejada atras */
+            80% { opacity: 0.65; transform: scale(1); } 
+            100% { opacity: 0; transform: scale(1); } 
+        }
+        
+        /* Icono de huella de gato dimensionado ajustado como rastro de tierra */
+        #envoltura_regalo .pata_gato { 
+            position: absolute; width: 45px; height: 45px; color: #444; 
+            z-index: 10005; pointer-events: none; opacity: 0; 
+            animation: paso_pata 3.5s forwards; mix-blend-mode: multiply; 
+        }
+        
+        /* Cartel espeluznante de codigo de sistema muerto centrado con letras verdes */
+        #envoltura_regalo .pantalla_error { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: black; z-index: 10010; display: flex; align-items: center; 
+            justify-content: center; opacity: 0; pointer-events: none; 
+            transition: opacity 0.3s; color: #0F0; font-family: monospace; 
+        }
+        #envoltura_regalo .pantalla_error.activo { opacity: 1; pointer-events: all; }
+        #envoltura_regalo .pantalla_error h2 { font-size: 5rem; text-shadow: 0 0 10px #0F0; }
+
+        /* Activa filtro CSS universal para voltear colores logrando vision extraña */
+        #envoltura_regalo.colores_invertidos { filter: invert(1); transition: filter 0.8s ease; }
+
+        /* Cuadro flotante grande centrado para alojar banderas sin romper layout */
+        #envoltura_regalo .capa_bandera { 
+            position: fixed; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%) scale(0); z-index: 10020; 
+            opacity: 0; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            
+            /* Transicion rebotante atractiva y limite estricto de pantalla visible */
+            pointer-events: none; border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+            max-width: 80%; max-height: 80%; 
+        }
+        #envoltura_regalo .capa_bandera.activo { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        
+        /* Animacion especifica para festejo de carnaval rotando leve el recuadro */
+        @keyframes rebote_samba { 
+            0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); } 
+            25% { transform: translate(-50%, -50%) scale(1.05) rotate(-3deg); } 
+            75% { transform: translate(-50%, -50%) scale(1.05) rotate(3deg); } 
+        }
+        #envoltura_regalo .capa_bandera.estilo_samba.activo { animation: rebote_samba 0.4s infinite; }
+        
+        /* Animacion brillosa radiante rodeando recuadro en tonalidades verde ecologico */
+        @keyframes brillo_majestuoso { 
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(0,255,0,0.3)); } 
+            50% { filter: drop-shadow(0 0 40px rgba(0,255,0,0.9)); } 
+        }
+        #envoltura_regalo .capa_bandera.estilo_esperanto.activo { animation: brillo_majestuoso 2s infinite; }
+        
+        /* Pequeñas particulas rotatorias con gravedad programada lluvia de papelitos fiesta */
+        #envoltura_regalo .papelillo { 
+            position: absolute; width: 12px; height: 12px; z-index: 10015; 
+            pointer-events: none; animation: caida_papelillo cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; 
+        }
+        @keyframes caida_papelillo { 
+            0% { transform: translate3d(0, -20px, 0) rotateX(0) rotateY(0); opacity: 1; } 
+            100% { transform: translate3d(var(--desvio), 110vh, 0) rotateX(1080deg) rotateY(720deg); opacity: 0; } 
+        }
+
+        /* Pantallazo rapido cegador auxiliar para efectos fotograficos intensivos visualmente */
+        @keyframes destello_luz { 0% { opacity: 1; } 100% { opacity: 0; } }
+        #envoltura_regalo .pantalla_destello { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background-color: white; z-index: 10030; pointer-events: none; opacity: 0; 
+        }
+        #envoltura_regalo .pantalla_destello.activo { animation: destello_luz 0.8s ease-out; }
     </style>
 </head>
-<body class="bg-black m-0 p-0"> <!-- Base fallback -->
+<body class="bg-black m-0 p-0"> 
     
-    <!-- ==========================================================================
-         SECCIÓN HTML: CONTENEDOR ENCAPSULADO PARA CSS SCOPEADO
-         ========================================================================== -->
-    <div id="regalo-wrapper">
-        <!-- CAPAS DE SUPERPOSICIÓN (OVERLAYS) -->
-        <canvas id="matrix-canvas" class="matrix-screen"></canvas>
-        <div id="error-404-overlay" class="error-404-screen">
-            <h2 class="animate-pulse">404 - NOT FOUND</h2>
+    <!-- PASO 2: Entrada y Maquetacion HTML Principal -->
+    
+    <div id="envoltura_regalo">
+        <!-- Zonas lienzo oscuras invisibles para montar graficos renderizados javascript -->
+        <canvas id="lienzo_codigo" class="pantalla_codigo"></canvas>
+        <div id="capa_error" class="pantalla_error">
+            <h2 class="animate-pulse">404 - NO ENCONTRADO</h2>
         </div>
-        <div id="freeze-overlay" class="freeze-screen"></div>
-        <div id="lightning-overlay" class="lightning"></div>
-        <div id="blood-overlay" class="blood-screen"></div>
-        <div id="hammer-overlay" class="hammer-overlay"></div>
-        <div id="flash-overlay" class="flash-screen"></div>
         
-        <!-- DOCUMENTO PRINCIPAL (CARPETA) -->
-        <div class="folder typewriter-text" id="capture-area">
+        <!-- Bloques div ocultos listos para recibir estilos opacos ambientales encima -->
+        <div id="capa_hielo" class="pantalla_hielo"></div>
+        <div id="capa_relampago" class="relampago"></div>
+        <div id="capa_sangre" class="pantalla_sangre"></div>
+        
+        <!-- Divs para estallidos repentinos ciegos y sonidos de impactos figurados -->
+        <div id="capa_martillo" class="capa_martillo"></div>
+        <div id="capa_destello" class="pantalla_destello"></div>
+        
+        <!-- Contenedor general que envuelve el documento capturable por foto -->
+        <div class="carpeta_base texto_maquina" id="area_captura">
             
-            <div class="tabs-container" data-html2canvas-ignore="true">
-                <button class="folder-tab" onclick="window.location.href='index.html'">Inicio</button>
-                <button class="folder-tab" onclick="window.location.href='expedientes.html'">Expedientes</button>
-            <button class="folder-tab" onclick="window.location.href='museo.html'">Museo</button>
-            <button class="folder-tab" onclick="window.location.href='regalo.html'">Regalos</button>
+            <!-- Botonera utilitaria para navegar a las diversas zonas funcionales -->
+            <div class="contenedor_pestanas" data-html2canvas-ignore="true">
+                <button class="pestana_carpeta" onclick="window.location.href='index.html'">Inicio</button>
+                <button class="pestana_carpeta" onclick="window.location.href='expedientes.html'">Expedientes</button>
+                <button class="pestana_carpeta" onclick="window.location.href='museo.html'">Museo</button>
+                <button class="pestana_carpeta" onclick="window.location.href='regalo.html'">Regalos</button>
             </div>
 
-            <div id="splatter-container" class="absolute inset-0 pointer-events-none z-50 overflow-hidden rounded"></div>
+            <!-- Recipiente con limites cortados donde alojaremos los fluidos rojos derramados -->
+            <div id="contenedor_salpicaduras" class="absolute inset-0 pointer-events-none z-50 overflow-hidden rounded"></div>
             
-            <div class="coffee-stain stain-1"></div>
-            <div class="coffee-stain stain-2"></div>
-            <div class="stamp-restricted">ACCESO RESTRINGIDO</div>
+            <!-- Posicionado de cercos cafe sucios otorgando desgaste antiguo deseado -->
+            <div class="mancha_cafe mancha_1"></div>
+            <div class="mancha_cafe mancha_2"></div>
+            <div class="sello_restringido">ACCESO RESTRINGIDO</div>
 
+            <!-- Encabezado superior delineado indicando clasificacion general del papel actual -->
             <header class="mb-8 border-b-2 border-black pb-4 mt-12">
-                <h1 class="text-2xl font-bold uppercase">Identificación Visitante</h1>
-                <p class="text-sm"><strong>FECHA:</strong> <span id="currentDate"></span></p>
+                <h1 class="text-2xl font-bold uppercase">Identificacion Visitante</h1>
+                <p class="text-sm"><strong>FECHA:</strong> <span id="fecha_actual"></span></p>
             </header>
 
+            <!-- Cuadro textual que da instrucciones claras antes interactuar nada importante -->
             <div class="mb-6">
                 <p class="mb-4">
-                    Advertencia: Estos ID solo son decorativos para que te puedas llevar un recuerdo de la pagina.
+                    Advertencia: Estos identificadores solo son decorativos para un recuerdo visual.
                 </p>
             </div>
 
+            <!-- Bloque destacado conteniendo cajas receptoras para meter comandos textos vivos -->
             <div class="bg-[#e8dec3] p-5 rounded border border-[#d4c5a3] shadow-inner mb-6 relative z-10">
                 <div class="mb-5">
-                    <label for="userName" class="block font-bold mb-1 text-sm uppercase">Nombre del Visitante:</label>
-                    <input type="text" id="userName" class="w-full bg-transparent border-b-2 border-black focus:outline-none font-mono text-lg uppercase py-1" placeholder="Ej. Elliot A." autocomplete="off">
+                    
+                    <!-- Pide colocar apodo activador o nombre civil normal identificativo -->
+                    <label for="nombre_usuario" class="block font-bold mb-1 text-sm uppercase">Nombre del Visitante:</label>
+                    <input type="text" id="nombre_usuario" class="w-full bg-transparent border-b-2 border-black focus:outline-none font-mono text-lg uppercase py-1" placeholder="Ej. Elliot A." autocomplete="off">
                 </div>
 
                 <div class="mb-2">
-                    <label for="userId" class="block font-bold mb-1 text-sm uppercase">ID de Visitante:</label>
+                    
+                    <!-- Campo bloqueado donde escribiremos programaticamente secuencias matematicas id calculadas -->
+                    <label for="identificador_usuario" class="block font-bold mb-1 text-sm uppercase">ID de Visitante:</label>
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <input type="text" id="userId" class="w-full bg-transparent border-b-2 border-black focus:outline-none font-mono text-lg py-1 cursor-not-allowed" readonly placeholder="[PENDIENTE]">
-                        <button onclick="generarId()" class="bg-black text-white px-4 py-2 font-mono text-sm hover:bg-gray-800 border-2 border-black focus:outline-none transition-colors whitespace-nowrap">
+                        <input type="text" id="identificador_usuario" class="w-full bg-transparent border-b-2 border-black focus:outline-none font-mono text-lg py-1 cursor-not-allowed" readonly placeholder="[PENDIENTE]">
+                        
+                        <!-- Pulsador disparador de la cadena logica secreta codificada js -->
+                        <button onclick="generar_identificador()" class="bg-black text-white px-4 py-2 font-mono text-sm hover:bg-gray-800 border-2 border-black focus:outline-none transition-colors whitespace-nowrap">
                             GENERAR ID
                         </button>
                     </div>
                 </div>
                 
-                <div id="clearanceLevel" class="text-xs font-bold text-red-700 h-4 mt-2 uppercase tracking-wide"></div>
+                <!-- Etiqueta roja chica que evalua estatus policial categorizado randomizado -->
+                <div id="nivel_seguridad" class="text-xs font-bold text-red-700 h-4 mt-2 uppercase tracking-wide"></div>
             </div>
 
+            <!-- Zona comando imprimir generando captura archivo bajado hacia escritorio ordenador -->
             <div class="text-center relative z-10" data-html2canvas-ignore="true">
-                <button onclick="validarAcceso()" class="border-4 border-black px-8 py-3 font-bold text-lg uppercase tracking-widest hover:bg-black hover:text-white transition-all w-full sm:w-auto">
+                <button onclick="validar_acceso()" class="border-4 border-black px-8 py-3 font-bold text-lg uppercase tracking-widest hover:bg-black hover:text-white transition-all w-full sm:w-auto">
                     Tomar Captura
                 </button>
             </div>
 
-            <div id="systemMessage" class="mt-6 text-center font-mono font-bold text-sm h-8" data-html2canvas-ignore="true"></div>
+            <!-- Mensajeria del sistema alertando errores faltantes o procesos existosos ocurriendo -->
+            <div id="mensaje_sistema" class="mt-6 text-center font-mono font-bold text-sm h-8" data-html2canvas-ignore="true"></div>
 
-            <div class="official-divider mt-8"></div>
+            <!-- Raya fina separadora previa final zona firma autoral sellada legitima -->
+            <div class="divisor_oficial mt-8"></div>
             <p class="text-center text-[10px] opacity-60 font-bold uppercase tracking-wider mb-8">
-                El sistema no registrará su ID solo es un ID decorativo.
+                El sistema no guardara sus datos, es totalmente seguro.
             </p>
 
-            <!-- SECCIÓN AUTOR (Corregida y movida DENTRO de .folder) -->
+            <!-- Div del creador oficial montando fotito adjuntada sellito verde lateral derecho -->
             <div class="pt-8 border-t-2 border-dashed border-[#888] flex flex-col sm:flex-row items-center sm:items-start gap-6 relative">
                 <div class="relative transform rotate-[-4deg] shrink-0 mt-2">
-                    <div class="paper-clip" style="top: -15px;"></div>
+                    
+                    <!-- Clipito metal colgado borde foto sujetandola pagina expediente misterioso central -->
+                    <div class="clip_papel" style="top: -15px;"></div>
                     <a href="https://github.com/thegabrielplusx" target="_blank" rel="noopener noreferrer">
-                        <img src="autor.webp" alt="Foto del Autor" onerror="this.onerror=null;this.src='https://placehold.co/100x100/333/fff?text=Autor';" class="w-24 h-24 object-cover border-4 border-white shadow-lg filter grayscale contrast-125">
+                        
+                        <!-- AQUI ESTA EL CAMBIO SOLICITADO IDENTIFICADOR UNICO ID NOMBRADO IMAGEN AUTOR -->
+                        <img id="imagen_autor" src="autor.webp" alt="Foto del Autor" onerror="this.onerror=null;this.src='https://placehold.co/100x100/333/fff?text=Autor';" class="w-24 h-24 object-cover border-4 border-white shadow-lg filter grayscale contrast-125">
                     </a>
                 </div>
                 
+                <!-- Letras descriptivas cargo asumido creador web letra tipografica cursiva firma -->
                 <div class="text-center sm:text-left z-10">
                     <h4 class="font-bold text-xs text-[#555] uppercase tracking-widest mb-1">Investigador Asignado</h4>
                     <p class="text-4xl font-bold text-blue-900 my-2" style="font-family: 'Brush Script MT', 'Lucida Handwriting', cursive; transform: rotate(-2deg); display: inline-block;">
                         Gabrielplux
                     </p>
+                    
+                    <!-- Bloque oscuro contrastante exhibiendo cedula imaginaria identificadora labor autoral -->
                     <div class="mt-1">
                         <p class="text-xs font-mono bg-black text-white px-2 py-1 inline-block">CREDENCIAL: V-1.004.36450</p>
                         <p class="text-xs font-mono text-gray-600 mt-1">Autor de este expediente digital.</p>
                     </div>
                 </div>
                 
+                <!-- Sello rectangular enorme transparente inclinado pisando esquinas textos inferiores validador -->
                 <div class="absolute right-4 bottom-2 opacity-40 transform rotate-[15deg] pointer-events-none">
                     <div class="border-4 border-green-800 text-green-800 p-2 text-xl font-bold uppercase tracking-widest rounded-sm" style="mix-blend-mode: multiply;">
                         Autor
@@ -308,423 +519,576 @@
                 </div>
             </div>
 
-        </div> <!-- Cierre .folder -->
-    </div> <!-- Cierre #regalo-wrapper -->
+        </div> 
+    </div> 
 
+    <!-- PASO 3: Proceso de Logica y Animaciones JavaScript -->
     <script>
-        /* --- 1. CONFIGURACIÓN Y DICCIONARIOS DE EASTER EGGS --- */
-        const EASTER_EGGS = {
-            'tesla': { id: '10071856', action: () => animaciones.rayo() },
-            '404': { id: '00000000', action: () => animaciones.error404() },
-            'matrix': { id: '01100101', action: () => animaciones.matrix('') },
-            'gabrielplusx': { id: '30052006', action: () => animaciones.matrix('¿Quien es Gabrielplusx?') },
-            'gabrieplusx': { id: '30052006', action: () => animaciones.matrix('¿Quien es Gabrielplusx?') },
-            'neo': { id: '00000001', action: () => animaciones.matrix('WAKE UP, Neo...') },
-            'mr robot': { id: '01010101', action: () => animaciones.matrix('HELLO, FRIEND...') },
-            'elliot alderson': { id: '01010101', action: () => animaciones.matrix('HELLO, FRIEND...') },
-            'asesino de la trinidad': { id: '04042009', action: () => animaciones.martillo() },
-            'dexter morgan': { id: '01102006', action: () => animaciones.sangre(false) }, 
-            'asesino en serie': { id: '01102006', action: () => animaciones.sangre(false) },
-            'ted bundy': { id: '01102006', action: () => animaciones.sangre(false) },
-            'serial killer': { id: '01102006', action: () => animaciones.sangre(false) },
-            'masacre': { id: '01102006', action: () => animaciones.sangre(false) },
-            'comunismo': { id: '01102006', action: () => animaciones.sangre(false) },
-            'brian moser': { id: '30112006', action: () => animaciones.hieloYSangre() },
-            'ice truck killer': { id: '30112006', action: () => animaciones.hieloYSangre() },
-            'asesino del camion de hielo': { id: '30112006', action: () => animaciones.hieloYSangre() },
-            'tom rangel': { id: 'M30W-C4T', action: () => animaciones.gato() },
-            'negative': { id: 'N3G4T1V3', action: () => animaciones.invertirColores() },
-            'brasil': { id: '07091822', action: () => animaciones.brasil() },
-            'esperanto': { id: '26071887', action: () => animaciones.esperanto() }
+        
+        // Diccionario relacionando frases gatillo con secuencias animadas disparadas secretas guardadas
+        const sorpresas_ocultas = {
+            'tesla': { id: '10071856', accion: () => efectos_visuales.rayo() },
+            '404': { id: '00000000', accion: () => efectos_visuales.error_sistema() },
+            
+            // Textos variados lanzando lluvia codigos verdosos matriz asustando usuarios broma
+            'matrix': { id: '01100101', accion: () => efectos_visuales.codigo_verde('') },
+            'gabrielplusx': { id: '30052006', accion: () => efectos_visuales.codigo_verde('¿Quien es Gabrielplusx?') },
+            'gabrieplusx': { id: '30052006', accion: () => efectos_visuales.codigo_verde('¿Quien es Gabrielplusx?') },
+            'neo': { id: '00000001', accion: () => efectos_visuales.codigo_verde('WAKE UP, Neo...') },
+            
+            // Frases celebres vinculadas programa hacker robando atencion foco central mensaje
+            'mr robot': { id: '01010101', accion: () => efectos_visuales.codigo_verde('HELLO, FRIEND...') },
+            'elliot alderson': { id: '01010101', accion: () => efectos_visuales.codigo_verde('HELLO, FRIEND...') },
+            'asesino de la trinidad': { id: '04042009', accion: () => efectos_visuales.martillo() },
+            
+            // Grupo tematico sangriento criminal tiñendo pantalla charcos rojos aleatorios macabros
+            'dexter morgan': { id: '01102006', accion: () => efectos_visuales.sangre(false) }, 
+            'asesino en serie': { id: '01102006', accion: () => efectos_visuales.sangre(false) },
+            'ted bundy': { id: '01102006', accion: () => efectos_visuales.sangre(false) },
+            'serial killer': { id: '01102006', accion: () => efectos_visuales.sangre(false) },
+            'masacre': { id: '01102006', accion: () => efectos_visuales.sangre(false) },
+            
+            // Frio paralizante previo gotear hemoglobina recreando escenas asesino hielo camiones
+            'comunismo': { id: '01102006', accion: () => efectos_visuales.sangre(false) },
+            'brian moser': { id: '30112006', accion: () => efectos_visuales.hielo_y_sangre() },
+            'ice truck killer': { id: '30112006', accion: () => efectos_visuales.hielo_y_sangre() },
+            'asesino del camion de hielo': { id: '30112006', accion: () => efectos_visuales.hielo_y_sangre() },
+            
+            // Cambio global de paleta graficas volteadas y pasos mininos misteriosos pisando
+            'tom rangel': { id: 'M30W-C4T', accion: () => efectos_visuales.gato() },
+            'negative': { id: 'N3G4T1V3', accion: () => efectos_visuales.invertir_colores() },
+            
+            // AQUI ESTA EL TRIGGER PARA CAMBIAR LA IMAGEN AL PONER BRASIL SOLICITADO
+            'brasil': { id: '07091822', accion: () => efectos_visuales.brasil() },
+            'esperanto': { id: '26071887', accion: () => efectos_visuales.esperanto() }
         };
 
-        const CLEARANCE_LEVELS = ['ALTO SECRETO', 'CONFIDENCIAL', 'RESTRINGIDO', 'PÚBLICO-LIMITADO'];
+        // Arreglo asignando privilegios inventados otorgando distincion final captura final bajada
+        const niveles_acceso = ['ALTO SECRETO', 'CONFIDENCIAL', 'RESTRINGIDO', 'PUBLICO-LIMITADO'];
 
-        /* --- 2. REFERENCIAS AL DOM (Ajustado al Wrapper) --- */
-        const DOM = {
-            wrapper: document.getElementById('regalo-wrapper'),
-            userName: document.getElementById('userName'),
-            userId: document.getElementById('userId'),
-            clearanceLevel: document.getElementById('clearanceLevel'),
-            systemMessage: document.getElementById('systemMessage'),
-            lightning: document.getElementById('lightning-overlay'),
-            blood: document.getElementById('blood-overlay'),
-            hammer: document.getElementById('hammer-overlay'),
-            error404: document.getElementById('error-404-overlay'),
-            freeze: document.getElementById('freeze-overlay'),
-            flash: document.getElementById('flash-overlay'),
-            splatterContainer: document.getElementById('splatter-container'),
-            matrixCanvas: document.getElementById('matrix-canvas'),
-            currentDate: document.getElementById('currentDate'),
-            captureArea: document.getElementById('capture-area')
+        // Repositorio capturando elementos html controlables evitando busquedas ineficientes repetidas pesadas
+        const elementos_interfaz = {
+            envoltura: document.getElementById('envoltura_regalo'),
+            entrada_nombre: document.getElementById('nombre_usuario'),
+            entrada_id: document.getElementById('identificador_usuario'),
+            
+            // Apartados textuales modificables indicando estados operaciones mensajes retroalimentativos interfaz
+            texto_nivel: document.getElementById('nivel_seguridad'),
+            texto_sistema: document.getElementById('mensaje_sistema'),
+            fecha_actual: document.getElementById('fecha_actual'),
+            zona_captura: document.getElementById('area_captura'),
+            
+            // Referencias directas bloques oscuros manipulables clases activadores efectos asombrosos
+            capa_relampago: document.getElementById('capa_relampago'),
+            capa_sangre: document.getElementById('capa_sangre'),
+            capa_martillo: document.getElementById('capa_martillo'),
+            capa_error: document.getElementById('capa_error'),
+            
+            // Zonas superiores lluvias particulas lienzos dibujables alterando vision panoramica externa
+            capa_hielo: document.getElementById('capa_hielo'),
+            capa_destello: document.getElementById('capa_destello'),
+            caja_salpicaduras: document.getElementById('contenedor_salpicaduras'),
+            lienzo_matriz: document.getElementById('lienzo_codigo'),
+            
+            // REFERENCIA AGREGADA BUSCANDO FOTO DEL CREADOR CONTROLAR ARCHIVO FUENTE
+            imagen_autor: document.getElementById('imagen_autor')
         };
 
-        function actualizarReloj() {
+        // Reloj dinamico formateado leyendo instante actual ubicacion fijada configuraciones servidor
+        function actualizar_reloj() {
             const ahora = new Date();
-            DOM.currentDate.textContent = ahora.toLocaleString('es-VE', {
+            
+            // Imprime cadena hora fecha legible formato criollo venezolano predeterminado siempre
+            elementos_interfaz.fecha_actual.textContent = ahora.toLocaleString('es-VE', {
                 year: 'numeric', month: '2-digit', day: '2-digit',
                 hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
             }) + ' HRS';
         }
-        actualizarReloj();
-        setInterval(actualizarReloj, 1000);
+        
+        // Puesta en marcha reloj refrescando informacion transcurrida cada milisegundo transcurrido
+        actualizar_reloj();
+        setInterval(actualizar_reloj, 1000);
 
-        let timers = { typing: null, timeouts: [] };
+        // Control centralizado parando ciclos infinitos evitando crasheos saturando memoria cpu
+        let temporizadores = { escritura: null, pausas: [] };
 
-        function limpiarPantalla() {
-            if (timers.typing) clearInterval(timers.typing);
-            timers.timeouts.forEach(clearTimeout);
-            timers.timeouts = [];
+        // Boton emergencia silencioso reseteando absolutamente todos trucos magia visual aplicados
+        function limpiar_pantalla() {
             
-            // Aplicamos clases al wrapper en lugar del body
-            DOM.wrapper.classList.remove('shake-active', 'heavy-shake-active', 'glitch-active', 'inverted-colors');
-            DOM.wrapper.style.backgroundColor = ""; 
-            DOM.lightning.classList.remove('active');
-            DOM.blood.classList.remove('active');
-            DOM.hammer.classList.remove('active');
-            DOM.freeze.classList.remove('active');
-            DOM.error404.classList.remove('active');
-            DOM.flash.classList.remove('active');
-            DOM.splatterContainer.innerHTML = ''; 
+            // Detiene tecleador numeros borra cronometros agendados descartando ordenes pendientementes programadas
+            if (temporizadores.escritura) clearInterval(temporizadores.escritura);
+            temporizadores.pausas.forEach(clearTimeout);
+            temporizadores.pausas = [];
             
-            document.querySelectorAll('.flag-overlay').forEach(el => el.remove());
+            // Purga clases alteradas devolviendo colores normales fondos estabilizando temblores pasados
+            elementos_interfaz.envoltura.classList.remove('temblor_activo', 'temblor_fuerte_activo', 'falla_activa', 'colores_invertidos');
+            elementos_interfaz.envoltura.style.backgroundColor = ""; 
+            
+            // Apaga visibilidad cortinas relampagos manchados frios errores escondiendo velos terror
+            elementos_interfaz.capa_relampago.classList.remove('activo');
+            elementos_interfaz.capa_sangre.classList.remove('activo');
+            elementos_interfaz.capa_martillo.classList.remove('activo');
+            elementos_interfaz.capa_hielo.classList.remove('activo');
+            
+            // Desactiva cegueras borra gotas derramadas dejando expediente reluciente inmaculado nuevo
+            elementos_interfaz.capa_error.classList.remove('activo');
+            elementos_interfaz.capa_destello.classList.remove('activo');
+            elementos_interfaz.caja_salpicaduras.innerHTML = ''; 
+            
+            // AQUI ESTA EL CAMBIO RESTAURA LA IMAGEN NORMAL SIEMPRE POR DEFECTO
+            elementos_interfaz.imagen_autor.src = 'autor.webp';
+            
+            // Destruye insignias nacionales generadas eliminando basurillas arrojadas html
+            document.querySelectorAll('.capa_bandera').forEach(el => el.remove());
 
-            if (window.matrixInterval) {
-                clearInterval(window.matrixInterval);
-                window.matrixInterval = null;
-                DOM.matrixCanvas.classList.remove('active');
+            // Detiene aguacero verde terminal borrando trazados lienzos recuperando rendimiento maquina
+            if (window.intervalo_matriz) {
+                clearInterval(window.intervalo_matriz);
+                window.intervalo_matriz = null;
+                elementos_interfaz.lienzo_matriz.classList.remove('activo');
             }
         }
 
-        function generarIdPorSistema(texto) {
-            const ua = navigator.userAgent.toLowerCase();
-            const aleatorio = (max, min = 0) => Math.floor(Math.random() * (max - min + 1)) + min;
-            const pad5 = () => aleatorio(99999).toString().padStart(5, '0');
+        // Lanza algoritmos calculos generando numeraciones oficiales creibles inspeccionando navegador cliente
+        function generar_identificador_sistema(texto) {
+            const nav = navigator.userAgent.toLowerCase();
+            const azar = (max, min = 0) => Math.floor(Math.random() * (max - min + 1)) + min;
+            const rellenar = () => azar(99999).toString().padStart(5, '0');
 
+            // Falsifica codigos asignando prefijos segun maquina detectada leyendo encabezados visitas
             if (texto.includes('linux')) return '17091991'; 
-            if (ua.includes('android')) return (aleatorio(1) ? '8' : '9') + (aleatorio(1) ? '8' : '9') + 'G' + pad5();
-            if (ua.includes('linux')) return aleatorio(5,1).toString() + aleatorio(5,1).toString() + aleatorio(5,1).toString() + pad5();
-            if (ua.includes('windows')) return '0' + (aleatorio(1) ? '6' : '7') + (aleatorio(1) ? '6' : '7') + pad5();
+            if (nav.includes('android')) return (azar(1) ? '8' : '9') + (azar(1) ? '8' : '9') + 'G' + rellenar();
             
-            return aleatorio(99999999).toString().padStart(8, '0'); 
+            // Ventanas computadores difieren telefonos moviles obteniendo identificadores formatos separados especificos
+            if (nav.includes('linux')) return azar(5,1).toString() + azar(5,1).toString() + azar(5,1).toString() + rellenar();
+            if (nav.includes('windows')) return '0' + (azar(1) ? '6' : '7') + (azar(1) ? '6' : '7') + rellenar();
+            
+            // Fallback general armando ochos digitos randomizados puramente matematicos sin reglas
+            return azar(99999999).toString().padStart(8, '0'); 
         }
 
-        window.generarId = function() {
-            limpiarPantalla();
-            const userName = DOM.userName.value.trim().toLowerCase();
-            let finalId = '';
+        // Disparador principal leyendo comando escrito decidiendo si asusta visitante aprueba acceso
+        window.generar_identificador = function() {
+            limpiar_pantalla();
+            const nombre_leido = elementos_interfaz.entrada_nombre.value.trim().toLowerCase();
+            let codigo_final = '';
 
-            if (EASTER_EGGS[userName]) {
-                finalId = EASTER_EGGS[userName].id;
-                EASTER_EGGS[userName].action(); 
+            // Detecta palabra escondida accionando trucos sorprendiendo usuarios descubridores secretos
+            if (sorpresas_ocultas[nombre_leido]) {
+                codigo_final = sorpresas_ocultas[nombre_leido].id;
+                sorpresas_ocultas[nombre_leido].accion(); 
             } else {
-                finalId = generarIdPorSistema(userName);
+                
+                // Si aburre escribiendo nombre normal entonces calcula numeros aburridos
+                codigo_final = generar_identificador_sistema(nombre_leido);
             }
-            animaciones.escribirId(finalId);
+            
+            // Imprime resolucion final cajetin respectivo sonido imaginario
+            efectos_visuales.escribir_codigo(codigo_final);
         };
 
-        const animaciones = {
-            escribirId: (id) => {
-                const nivel = CLEARANCE_LEVELS[Math.floor(Math.random() * CLEARANCE_LEVELS.length)];
-                DOM.userId.value = '';
-                DOM.clearanceLevel.textContent = '';
+        // Catalogo aglutinando magias ejecutables referenciadas llamadas diccionario evaluador inicial
+        const efectos_visuales = {
+            
+            // Golpetea teclas llenando cajoncito input numerico fingiendo digitacion humana rapida
+            escribir_codigo: (codigo) => {
+                const rango = niveles_acceso[Math.floor(Math.random() * niveles_acceso.length)];
+                elementos_interfaz.entrada_id.value = '';
+                elementos_interfaz.texto_nivel.textContent = '';
                 
-                let i = 0;
-                timers.typing = setInterval(() => {
-                    if (i < id.length) {
-                        DOM.userId.value += id.charAt(i++);
+                let indice = 0;
+                
+                // Iterador veloz vaciando letras cadenita char tras char simulador tipeo
+                temporizadores.escritura = setInterval(() => {
+                    if (indice < codigo.length) {
+                        elementos_interfaz.entrada_id.value += codigo.charAt(indice++);
                     } else {
-                        clearInterval(timers.typing);
-                        DOM.clearanceLevel.textContent = `NIVEL DE ACCESO ASIGNADO: ${nivel}`;
-                        DOM.userId.dataset.nivel = nivel; 
+                        
+                        // Frena iteracion estampa aviso rojo adjudicando titulo seguridad respectivo aleatorio
+                        clearInterval(temporizadores.escritura);
+                        elementos_interfaz.texto_nivel.textContent = `NIVEL DE ACCESO ASIGNADO: ${rango}`;
+                        elementos_interfaz.entrada_id.dataset.nivel = rango; 
                     }
                 }, 30); 
             },
 
+            // Flashazo tremendo temblando cimientos imitando descarga voltaica tormentas intensas asustadizas
             rayo: () => {
-                void DOM.lightning.offsetWidth; 
-                DOM.lightning.classList.add('active');
-                DOM.wrapper.classList.add('heavy-shake-active');
-                timers.timeouts.push(setTimeout(() => DOM.wrapper.classList.remove('heavy-shake-active'), 300));
+                void elementos_interfaz.capa_relampago.offsetWidth; 
+                elementos_interfaz.capa_relampago.classList.add('activo');
+                
+                // Inyecta clase sacudida tremenda pausando milisegundos retirandola despues brevemente
+                elementos_interfaz.envoltura.classList.add('temblor_fuerte_activo');
+                temporizadores.pausas.push(setTimeout(() => elementos_interfaz.envoltura.classList.remove('temblor_fuerte_activo'), 300));
             },
 
-            sangre: (pantallaCompleta = true, sacudidaBrutal = false) => {
-                // Temblor en el wrapper aislado
-                DOM.wrapper.classList.add(sacudidaBrutal ? 'heavy-shake-active' : 'shake-active');
+            // Esparce bolitas rojas deformes ensuciando documento simulacion heridas fuertes chorreantes
+            sangre: (pantalla_llena = true, golpe_duro = false) => {
                 
-                if (pantallaCompleta) {
-                    void DOM.blood.offsetWidth;
-                    DOM.blood.classList.add('active');
+                // Valora fuerza parametro metiendo temblorcito temblorazo segun pida llamada inicial
+                elementos_interfaz.envoltura.classList.add(golpe_duro ? 'temblor_fuerte_activo' : 'temblor_activo');
+                
+                if (pantalla_llena) {
+                    void elementos_interfaz.capa_sangre.offsetWidth;
+                    elementos_interfaz.capa_sangre.classList.add('activo');
                 }
                 
-                const fragment = document.createDocumentFragment();
-                const numGotas = sacudidaBrutal ? 100 : 60;
+                // Trozo virtual ahorrando repintados graficos agregando gotas lote completo junto
+                const fragmento = document.createDocumentFragment();
+                const cant_gotas = golpe_duro ? 100 : 60;
 
-                for(let j = 0; j < numGotas; j++) {
-                    let splat = document.createElement('div');
-                    let size = Math.random() * (sacudidaBrutal ? 150 : 100) + (sacudidaBrutal ? 40 : 30);
-                    splat.className = 'blood-splatter';
-                    splat.style.cssText = `
-                        width: ${size}px; height: ${size}px;
+                // Fabrica circulitos aplastados dispares diseminandolos coordenadas arbitrarias cubriendo perimetro
+                for(let j = 0; j < cant_gotas; j++) {
+                    let mancha = document.createElement('div');
+                    let tamano = Math.random() * (golpe_duro ? 150 : 100) + (golpe_duro ? 40 : 30);
+                    mancha.className = 'salpicadura_sangre';
+                    
+                    // Asigna diametros variopintos radios redondez dislocados dando aire charquito natural
+                    mancha.style.cssText = `
+                        width: ${tamano}px; height: ${tamano}px;
                         left: ${Math.random() * 100}%; top: ${Math.random() * 100}%;
                         border-radius: ${Math.random()*50+25}% ${Math.random()*50+25}% ${Math.random()*50+25}% ${Math.random()*50+25}% / ${Math.random()*50+25}% ${Math.random()*50+25}% ${Math.random()*50+25}% ${Math.random()*50+25}%;
                     `;
-                    fragment.appendChild(splat);
+                    fragmento.appendChild(mancha);
                 }
-                DOM.splatterContainer.appendChild(fragment);
+                elementos_interfaz.caja_salpicaduras.appendChild(fragmento);
 
+                // Destapa opacidades poco a poco haciendo brotar fluidos magicamente visibilidad escalonada
                 setTimeout(() => {
-                    Array.from(DOM.splatterContainer.children).forEach((gota) => {
+                    Array.from(elementos_interfaz.caja_salpicaduras.children).forEach((gota) => {
                         setTimeout(() => {
                             gota.style.opacity = '0.9';
                             gota.style.transform = 'scale(1)';
-                        }, Math.random() * (sacudidaBrutal ? 150 : 400)); 
+                        }, Math.random() * (golpe_duro ? 150 : 400)); 
                     });
-                }, sacudidaBrutal ? 20 : 50);
+                }, golpe_duro ? 20 : 50);
 
-                timers.timeouts.push(setTimeout(() => {
-                    DOM.wrapper.classList.remove('shake-active', 'heavy-shake-active');
-                }, sacudidaBrutal ? 1000 : 6000));
+                // Calma aguas sacando modos temblorosos dejando rastro crimen sucio intocable
+                temporizadores.pausas.push(setTimeout(() => {
+                    elementos_interfaz.envoltura.classList.remove('temblor_activo', 'temblor_fuerte_activo');
+                }, golpe_duro ? 1000 : 6000));
             },
 
+            // Golpe sordo sacudida bruta manchando subito sorprendiendo descuidados total infragantis
             martillo: () => {
-                void DOM.hammer.offsetWidth;
-                DOM.hammer.classList.add('active');
+                void elementos_interfaz.capa_martillo.offsetWidth;
+                elementos_interfaz.capa_martillo.classList.add('activo');
                 
-                timers.timeouts.push(setTimeout(() => {
-                    animaciones.sangre(false, true); 
+                // Secuencia coordinada aguantando manchado hasta sentir mazo chocando madera dura
+                temporizadores.pausas.push(setTimeout(() => {
+                    efectos_visuales.sangre(false, true); 
                 }, 280));
 
-                timers.timeouts.push(setTimeout(() => DOM.hammer.classList.remove('active'), 800));
+                temporizadores.pausas.push(setTimeout(() => elementos_interfaz.capa_martillo.classList.remove('activo'), 800));
             },
 
-            error404: () => {
-                void DOM.error404.offsetWidth;
-                DOM.error404.classList.add('active');
+            // Muestra pantallazo clasico letal apagando ilusiones graficas tapandolo letras hacker
+            error_sistema: () => {
+                void elementos_interfaz.capa_error.offsetWidth;
+                elementos_interfaz.capa_error.classList.add('activo');
             },
 
-            hieloYSangre: () => {
-                // Activar capa de congelamiento
-                void DOM.freeze.offsetWidth;
-                DOM.freeze.classList.add('active');
+            // Frio extremo empanando lente despues brotando rojez tibia bajando gotitas heladas
+            hielo_y_sangre: () => {
+                void elementos_interfaz.capa_hielo.offsetWidth;
+                elementos_interfaz.capa_hielo.classList.add('activo');
                 
-                // Esperar 1.5s antes de que caiga la sangre (efecto Dexter)
-                timers.timeouts.push(setTimeout(() => {
-                    animaciones.sangre(false, false); 
+                // Suspense cronometrado dejando helar huesos antes derramar vital liquido repentino
+                temporizadores.pausas.push(setTimeout(() => {
+                    efectos_visuales.sangre(false, false); 
                     
-                    // Retirar el congelamiento tras unos segundos adicionales
-                    timers.timeouts.push(setTimeout(() => {
-                        DOM.freeze.classList.remove('active');
+                    temporizadores.pausas.push(setTimeout(() => {
+                        elementos_interfaz.capa_hielo.classList.remove('activo');
                     }, 2000));
                 }, 1500)); 
             },
 
-            matrix: (mensajeCentral) => {
-                DOM.wrapper.classList.add('glitch-active');
-                if (mensajeCentral !== '') DOM.wrapper.classList.add('shake-active');
+            // Cortina iconica cifrada esmeralda cayendo cascada cubriendo mentiras revelando verdades 
+            codigo_verde: (texto_central) => {
+                elementos_interfaz.envoltura.classList.add('falla_activa');
                 
-                timers.timeouts.push(setTimeout(() => {
-                    DOM.matrixCanvas.classList.add('active');
-                    const ctx = DOM.matrixCanvas.getContext('2d', { alpha: false }); 
+                // Vibrador activado solo si trae frase celebre pegando grito alarma silente
+                if (texto_central !== '') elementos_interfaz.envoltura.classList.add('temblor_activo');
+                
+                temporizadores.pausas.push(setTimeout(() => {
+                    elementos_interfaz.lienzo_matriz.classList.add('activo');
                     
-                    DOM.matrixCanvas.width = window.innerWidth;
-                    DOM.matrixCanvas.height = window.innerHeight;
+                    // Inicializa pintor grafico brochazos rapidos repintando rectangulos transparentes borrosos
+                    const pincel = elementos_interfaz.lienzo_matriz.getContext('2d', { alpha: false }); 
                     
-                    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ｱｲｳｴｵｶｷｸｹｺ'.split('');
-                    const fontSize = window.innerWidth < 600 ? 14 : 18; 
-                    const columnas = Math.floor(DOM.matrixCanvas.width / fontSize);
-                    const gotas = new Float32Array(columnas).fill(0).map(() => Math.random() * -50);
+                    elementos_interfaz.lienzo_matriz.width = window.innerWidth;
+                    elementos_interfaz.lienzo_matriz.height = window.innerHeight;
+                    
+                    // Surtido abecedarios nipon occidental numerico barajados escogidos estela descendente
+                    const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ｱｲｳｴｵｶｷｸｹｺ'.split('');
+                    const tam_letra = window.innerWidth < 600 ? 14 : 18; 
+                    const columnas_totales = Math.floor(elementos_interfaz.lienzo_matriz.width / tam_letra);
+                    
+                    // Vectores altura columnillas iniciando desfases arriba techo escondidos esperando
+                    const cord_gotas = new Float32Array(columnas_totales).fill(0).map(() => Math.random() * -50);
 
-                    function dibujarMatrix() {
-                        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-                        ctx.fillRect(0, 0, DOM.matrixCanvas.width, DOM.matrixCanvas.height);
-                        ctx.font = fontSize + 'px monospace';
+                    // Motor renderizador repitiendo eternamente calculos dibujados microsegundos infalible
+                    function pintar_lluvia() {
                         
-                        for(let i = 0; i < gotas.length; i++) {
-                            if (gotas[i] * fontSize > 0) {
-                                const texto = caracteres[Math.floor(Math.random() * caracteres.length)];
-                                ctx.fillStyle = '#0F0';
-                                ctx.fillText(texto, i * fontSize, (gotas[i] - 1) * fontSize);
-                                ctx.fillStyle = '#FFF';
-                                ctx.fillText(texto, i * fontSize, gotas[i] * fontSize);
+                        // Aplica sombra diluyendo marco anterior logrando difuminado cola cometa
+                        pincel.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                        pincel.fillRect(0, 0, elementos_interfaz.lienzo_matriz.width, elementos_interfaz.lienzo_matriz.height);
+                        pincel.font = tam_letra + 'px monospace';
+                        
+                        // Recorre renglones pintado caracter escogido fosforescente rastro brillante
+                        for(let i = 0; i < cord_gotas.length; i++) {
+                            if (cord_gotas[i] * tam_letra > 0) {
+                                const letra_sacada = letras[Math.floor(Math.random() * letras.length)];
+                                pincel.fillStyle = '#0F0';
+                                pincel.fillText(letra_sacada, i * tam_letra, (cord_gotas[i] - 1) * tam_letra);
+                                
+                                // Punta lanza flecha blanca pura resaltando tope columna viva
+                                pincel.fillStyle = '#FFF';
+                                pincel.fillText(letra_sacada, i * tam_letra, cord_gotas[i] * tam_letra);
                             }
-                            if(gotas[i] * fontSize > DOM.matrixCanvas.height && Math.random() > 0.975) gotas[i] = 0;
-                            gotas[i]++;
+                            
+                            // Reincia contador subiendo tope azarosamente rompiendo monotonias previsibles
+                            if(cord_gotas[i] * tam_letra > elementos_interfaz.lienzo_matriz.height && Math.random() > 0.975) cord_gotas[i] = 0;
+                            cord_gotas[i]++;
                         }
 
-                        if (mensajeCentral) {
-                            ctx.fillStyle = '#0F0';
-                            ctx.font = 'bold 30px Courier New'; 
-                            ctx.textAlign = 'center';
-                            ctx.fillText(mensajeCentral, DOM.matrixCanvas.width / 2, DOM.matrixCanvas.height / 2);
-                            ctx.textAlign = 'left';
+                        // Superpone frase mandatoria centrada gritando despierte durmiente iluso conectado
+                        if (texto_central) {
+                            pincel.fillStyle = '#0F0';
+                            pincel.font = 'bold 30px Courier New'; 
+                            pincel.textAlign = 'center';
+                            pincel.fillText(texto_central, elementos_interfaz.lienzo_matriz.width / 2, elementos_interfaz.lienzo_matriz.height / 2);
+                            pincel.textAlign = 'left';
                         }
                     }
                     
-                    if(!window.matrixInterval) window.matrixInterval = setInterval(dibujarMatrix, 50); 
+                    // Arranque biela motor girando bucle rapidisimo sin atascar navegador
+                    if(!window.intervalo_matriz) window.intervalo_matriz = setInterval(pintar_lluvia, 50); 
                     
-                    timers.timeouts.push(setTimeout(() => {
-                        DOM.wrapper.classList.remove('glitch-active', 'shake-active');
-                        timers.timeouts.push(setTimeout(() => {
-                            DOM.matrixCanvas.classList.remove('active');
-                            timers.timeouts.push(setTimeout(() => {
-                                clearInterval(window.matrixInterval);
-                                window.matrixInterval = null;
+                    // Freno emergencia apagando matrices limpiando corrupciones visuales fallas provocadas
+                    temporizadores.pausas.push(setTimeout(() => {
+                        elementos_interfaz.envoltura.classList.remove('falla_activa', 'temblor_activo');
+                        temporizadores.pausas.push(setTimeout(() => {
+                            elementos_interfaz.lienzo_matriz.classList.remove('activo');
+                            
+                            temporizadores.pausas.push(setTimeout(() => {
+                                clearInterval(window.intervalo_matriz);
+                                window.intervalo_matriz = null;
                             }, 500));
                         }, 4000));
                     }, 450));
                 }, 300));
             },
 
+            // Trazado escalonado subiendo patitas felinas cruzando archivo despistando atenciones
             gato: () => {
-                const fragment = document.createDocumentFragment();
-                // Coordenadas que cruzan la carpeta diagonalmente
-                const walkingPath = [
+                const fragmento = document.createDocumentFragment();
+                
+                // Mapeo coordenadas ruta imaginaria pisadas diagonales subiendo derecha
+                const ruta_caminar = [
                     {x: 10, y: 75}, {x: 25, y: 65}, {x: 40, y: 55}, 
                     {x: 55, y: 45}, {x: 70, y: 35}, {x: 85, y: 25}
                 ];
 
-                walkingPath.forEach((pos, index) => {
-                    let paw = document.createElement('div');
-                    paw.className = 'cat-paw';
-                    paw.style.left = `${pos.x}%`;
-                    paw.style.top = `${pos.y}%`;
-                    paw.style.animationDelay = `${index * 0.4}s`;
+                // Ciclo montando almohadillas separadas retrasando aparicion emulando caminado lento
+                ruta_caminar.forEach((pos, indice) => {
+                    let huella = document.createElement('div');
+                    huella.className = 'pata_gato';
                     
-                    // Alterna ligeramente la pata izquierda y derecha y la rotación para darle naturalidad
-                    const offset = index % 2 === 0 ? -15 : 15; 
-                    const rotation = 55; // Ángulo caminando hacia arriba a la derecha
+                    // Acomodo milimetrico tiempos espera espaciando zancadas naturales gato real
+                    huella.style.left = `${pos.x}%`;
+                    huella.style.top = `${pos.y}%`;
+                    huella.style.animationDelay = `${indice * 0.4}s`;
                     
-                    paw.innerHTML = `<svg style="transform: rotate(${rotation}deg) translate(${offset}px, 0)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M226.5 92.9c14.3 7.3 28.9 22.9 32.8 44.3c2.5 13.6-5 28.6-17.6 37.1c-16.8 11.3-41.4 17.8-67.1 17.8c-29.4 0-50.8-5.1-66.3-17.3c-11.2-8.8-17-23.7-12.9-37.3c7.7-25.6 28.2-39.2 41.5-44.5c16.3-6.5 31.8-10.4 46.1-10.4c16 0 31.5 4.3 43.5 10.3zM32 232c-17.7 0-32-14.3-32-32c0-30.7 13.5-56.3 32-72c15.8-13.4 36-24 56-24c17.7 0 32 14.3 32 32c0 30.7-13.5 56.3-32 72c-15.8 13.4-36 24-56 24zm144 264c-22.1 0-42.3-10.7-54.6-28.4c-9.5-13.6-14.8-29.4-17-45.7c-4-29.9 8.2-57.9 31.5-74.1c19.1-13.3 43-20.9 69-20.9c25.4 0 48.9 7.3 67.8 20.3c22.6 15.6 34.6 42.6 31 71.3c-2.3 17.8-8.4 35.1-19.1 49.9C273.8 485.4 251.1 496 228 496c-17.3 0-35.3-4.5-52-10zM352 104c20 0 40.2 10.6 56 24c18.5 15.7 32 41.3 32 72c0 17.7-14.3 32-32 32c-20 0-40.2-10.6-56-24c-18.5-15.7-32-41.3-32-72c0-17.7 14.3-32 32-32zm128 96c0 17.7-14.3 32-32 32c-20 0-40.2-10.6-56-24c-18.5-15.7-32-41.3-32-72c0-17.7 14.3-32 32-32c20 0 40.2 10.6 56 24c18.5 15.7 32 41.3 32 72z"/></svg>`;
-                    fragment.appendChild(paw);
+                    // Rotaciones balanceos fingiendo apoyos alternados extremidades izquierda derechas
+                    const desvio = indice % 2 === 0 ? -15 : 15; 
+                    const giro = 55; 
+                    
+                    // Inyeccion vectores dibujando garras sucias manchando papel expediente clasificado
+                    huella.innerHTML = `<svg style="transform: rotate(${giro}deg) translate(${desvio}px, 0)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M226.5 92.9c14.3 7.3 28.9 22.9 32.8 44.3c2.5 13.6-5 28.6-17.6 37.1c-16.8 11.3-41.4 17.8-67.1 17.8c-29.4 0-50.8-5.1-66.3-17.3c-11.2-8.8-17-23.7-12.9-37.3c7.7-25.6 28.2-39.2 41.5-44.5c16.3-6.5 31.8-10.4 46.1-10.4c16 0 31.5 4.3 43.5 10.3zM32 232c-17.7 0-32-14.3-32-32c0-30.7 13.5-56.3 32-72c15.8-13.4 36-24 56-24c17.7 0 32 14.3 32 32c0 30.7-13.5 56.3-32 72c-15.8 13.4-36 24-56 24zm144 264c-22.1 0-42.3-10.7-54.6-28.4c-9.5-13.6-14.8-29.4-17-45.7c-4-29.9 8.2-57.9 31.5-74.1c19.1-13.3 43-20.9 69-20.9c25.4 0 48.9 7.3 67.8 20.3c22.6 15.6 34.6 42.6 31 71.3c-2.3 17.8-8.4 35.1-19.1 49.9C273.8 485.4 251.1 496 228 496c-17.3 0-35.3-4.5-52-10zM352 104c20 0 40.2 10.6 56 24c18.5 15.7 32 41.3 32 72c0 17.7-14.3 32-32 32c-20 0-40.2-10.6-56-24c-18.5-15.7-32-41.3-32-72c0-17.7 14.3-32 32-32zm128 96c0 17.7-14.3 32-32 32c-20 0-40.2-10.6-56-24c-18.5-15.7-32-41.3-32-72c0-17.7 14.3-32 32-32c20 0 40.2 10.6 56 24c18.5 15.7 32 41.3 32 72z"/></svg>`;
+                    fragmento.appendChild(huella);
                 });
-                DOM.splatterContainer.appendChild(fragment);
+                elementos_interfaz.caja_salpicaduras.appendChild(fragmento);
             },
 
-            invertirColores: () => {
-                DOM.wrapper.classList.add('inverted-colors');
+            // Aplica opuesto polar invirtiendo paletas colores logrando aspecto negado negativo
+            invertir_colores: () => {
+                elementos_interfaz.envoltura.classList.add('colores_invertidos');
             },
 
+            // AQUI ESTA LA MAGIA FESTIVA MODIFICADA EXIGIDA BRASILEÑA
             brasil: () => {
-                void DOM.flash.offsetWidth;
-                DOM.flash.classList.add('active');
                 
-                DOM.wrapper.classList.add('shake-active');
-                timers.timeouts.push(setTimeout(() => DOM.wrapper.classList.remove('shake-active'), 500));
+                // Sustituye fotografia seria asignando version festiva especial brasilautor png modificado
+                elementos_interfaz.imagen_autor.src = 'brasilautor.png';
 
-                const colors = ['#009c3b', '#ffdf00', '#002776', '#ffffff', '#ff0000', '#ff00ff', '#00ffff'];
-                const fragment = document.createDocumentFragment();
+                // Fogonazo brillante blanco iniciando celebracion asombrando repentinamente expectante
+                void elementos_interfaz.capa_destello.offsetWidth;
+                elementos_interfaz.capa_destello.classList.add('activo');
                 
+                // Tembladera corta vibrando samba animando recuadro contendor sacudiendo tristezas
+                elementos_interfaz.envoltura.classList.add('temblor_activo');
+                temporizadores.pausas.push(setTimeout(() => elementos_interfaz.envoltura.classList.remove('temblor_activo'), 500));
+
+                // Repertorio tonalidades alegres carnestolendas vistiendo lluvia festiva proxima
+                const lista_tonos = ['#009c3b', '#ffdf00', '#002776', '#ffffff', '#ff0000', '#ff00ff', '#00ffff'];
+                const fragmento = document.createDocumentFragment();
+                
+                // Fabrica centenares papelitos coloridos esparcidos aleatoriamente flotando gravedades bajas
                 for(let i=0; i<300; i++) {
-                    let conf = document.createElement('div');
-                    conf.className = 'confetti';
-                    conf.style.left = `${Math.random() * 100}%`;
-                    conf.style.top = `${Math.random() * -30}%`;
-                    conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    conf.style.animationDuration = `${Math.random() * 2.5 + 1.5}s`;
-                    conf.style.setProperty('--sway', `${(Math.random() - 0.5) * 400}px`);
-                    if(Math.random() > 0.5) conf.style.borderRadius = '50%';
-                    fragment.appendChild(conf);
+                    let confeti = document.createElement('div');
+                    confeti.className = 'papelillo';
+                    
+                    // Coordenadas nubes altas asegurando bajada larga vistosa atravesando monitor entero
+                    confeti.style.left = `${Math.random() * 100}%`;
+                    confeti.style.top = `${Math.random() * -30}%`;
+                    confeti.style.backgroundColor = lista_tonos[Math.floor(Math.random() * lista_tonos.length)];
+                    
+                    // Modificadores bamboleos tiempos variados otorgando naturalismo caidas irregulares
+                    confeti.style.animationDuration = `${Math.random() * 2.5 + 1.5}s`;
+                    confeti.style.setProperty('--desvio', `${(Math.random() - 0.5) * 400}px`);
+                    if(Math.random() > 0.5) confeti.style.borderRadius = '50%';
+                    fragmento.appendChild(confeti);
                 }
-                DOM.splatterContainer.appendChild(fragment);
+                elementos_interfaz.caja_salpicaduras.appendChild(fragmento);
 
-                let flag = document.createElement('img');
-                flag.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 504'%3E%3Crect width='720' height='504' fill='%23009c3b'/%3E%3Cpolygon points='360,86 634,252 360,418 86,252' fill='%23ffdf00'/%3E%3Ccircle cx='360' cy='252' r='106' fill='%23002776'/%3E%3Cpath d='M260,252 A106,106 0 0,0 460,252 A106,106 0 0,1 260,252' fill='%23ffffff'/%3E%3C/svg%3E";
-                flag.className = 'flag-overlay samba';
-                DOM.wrapper.appendChild(flag);
+                // Dibuja emblema verdeamarillo gigante rebotando gloriosamente coronando celebraciones sudamericanas
+                let bandera_br = document.createElement('img');
+                bandera_br.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 504'%3E%3Crect width='720' height='504' fill='%23009c3b'/%3E%3Cpolygon points='360,86 634,252 360,418 86,252' fill='%23ffdf00'/%3E%3Ccircle cx='360' cy='252' r='106' fill='%23002776'/%3E%3Cpath d='M260,252 A106,106 0 0,0 460,252 A106,106 0 0,1 260,252' fill='%23ffffff'/%3E%3C/svg%3E";
+                bandera_br.className = 'capa_bandera estilo_samba';
+                elementos_interfaz.envoltura.appendChild(bandera_br);
                 
-                void flag.offsetWidth;
-                flag.classList.add('active');
+                // Activa rebotes animaciones graficas forzando reconteo tamanos objetos inyectados
+                void bandera_br.offsetWidth;
+                bandera_br.classList.add('activo');
 
-                timers.timeouts.push(setTimeout(() => {
-                    flag.classList.remove('active');
+                // Cronometros asesinos limpiando escenarios apagando luces finalizando rumbas
+                temporizadores.pausas.push(setTimeout(() => {
+                    bandera_br.classList.remove('activo');
                     setTimeout(() => {
-                        flag.remove();
-                        DOM.flash.classList.remove('active');
+                        bandera_br.remove();
+                        elementos_interfaz.capa_destello.classList.remove('activo');
                     }, 600);
                 }, 5500));
             },
 
+            // Enaltece idioma universal izando estandarte verdiblanco oscureciendo sala honores
             esperanto: () => {
-                let flag = document.createElement('img');
-                flag.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Crect width='600' height='400' fill='%23009900'/%3E%3Crect width='200' height='200' fill='%23ffffff'/%3E%3Cpolygon points='100,20 125,95 200,95 140,140 160,215 100,170 40,215 60,140 0,95 75,95' fill='%23009900'/%3E%3C/svg%3E";
-                flag.className = 'flag-overlay esperanto-style';
-                DOM.wrapper.appendChild(flag);
                 
-                DOM.wrapper.style.backgroundColor = "#001a00";
+                // Sustituye fotografia seria asignando version festiva especial esperanto png
+                elementos_interfaz.imagen_autor.src = 'esperanto.png';
                 
-                void flag.offsetWidth;
-                flag.classList.add('active');
+                let bandera_esp = document.createElement('img');
+                
+                // Vectorizado estrellado simbolizando union linguistica fronteras caidas mundiales
+                bandera_esp.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Crect width='600' height='400' fill='%23009900'/%3E%3Crect width='200' height='200' fill='%23ffffff'/%3E%3Cpolygon points='100,20 125,95 200,95 140,140 160,215 100,170 40,215 60,140 0,95 75,95' fill='%23009900'/%3E%3C/svg%3E";
+                bandera_esp.className = 'capa_bandera estilo_esperanto';
+                elementos_interfaz.envoltura.appendChild(bandera_esp);
+                
+                // Tinte lugubre enmarcando luminiscencias resplandecientes resaltando insignia izada gloriosa
+                elementos_interfaz.envoltura.style.backgroundColor = "#001a00";
+                
+                void bandera_esp.offsetWidth;
+                bandera_esp.classList.add('activo');
 
-                timers.timeouts.push(setTimeout(() => {
-                    flag.classList.remove('active');
-                    DOM.wrapper.style.backgroundColor = ""; 
-                    setTimeout(() => flag.remove(), 600);
+                // Limpiadores barriendo restos conmemoraciones retornando colores apagados convencionales
+                temporizadores.pausas.push(setTimeout(() => {
+                    bandera_esp.classList.remove('activo');
+                    elementos_interfaz.envoltura.style.backgroundColor = ""; 
+                    setTimeout(() => bandera_esp.remove(), 600);
                 }, 6000));
             }
         };
 
-        window.validarAcceso = function() {
-            const userName = DOM.userName.value.trim().toUpperCase();
-            const userId = DOM.userId.value.trim();
-            const msgBox = DOM.systemMessage;
+        // PASO 4: Salida - Guardado y Descarga de Imagen Renderizada
+        
+        // Ejecutor fotografico validador exigiendo credenciales validas previas flashazo obturador
+        window.validar_acceso = function() {
+            const nombre_leido = elementos_interfaz.entrada_nombre.value.trim().toUpperCase();
+            const codigo_leido = elementos_interfaz.entrada_id.value.trim();
+            const caja_aviso = elementos_interfaz.texto_sistema;
 
-            msgBox.className = "mt-6 text-center font-mono font-bold text-sm h-8";
+            // Restaura mensajerias quitando colores alterados alertas previas solucionadas subsanadas
+            caja_aviso.className = "mt-6 text-center font-mono font-bold text-sm h-8";
 
-            if (!userName || !userId) {
-                msgBox.textContent = `[!] ERROR: ${!userName ? 'IDENTIDAD' : 'ID DE AUTORIZACIÓN'} REQUERIDA.`;
-                msgBox.classList.add("text-red-600");
+            // Ataja negligencias castigando usuarios saltadores procesos pidiendo obligatoriamente campos
+            if (!nombre_leido || !codigo_leido) {
+                caja_aviso.textContent = `[!] ERROR: ${!nombre_leido ? 'IDENTIDAD' : 'ID DE AUTORIZACION'} REQUERIDA.`;
+                caja_aviso.classList.add("text-red-600");
                 return;
             }
 
-            msgBox.innerHTML = `PROCESANDO CAPTURA DE CREDENCIAL <span class="animate-pulse">...</span>`;
-            msgBox.classList.add("text-blue-800");
+            // Cambia texto informando inicio procesamiento graficador asincrono calculando recortes
+            caja_aviso.innerHTML = `PROCESANDO CAPTURA DE CREDENCIAL <span class="animate-pulse">...</span>`;
+            caja_aviso.classList.add("text-blue-800");
 
+            // Brevisima pausa garantizando repintado textos informativos evitando congelamientos interfaz
             setTimeout(() => {
+                
+                // Inspecciona si libreria magica creadora imagenes cargada correctamente cabecera documentacion
                 if (typeof html2canvas === 'undefined') {
-                    msgBox.textContent = "[!] ERROR: HERRAMIENTA DE CAPTURA NO DISPONIBLE.";
-                    msgBox.className = "mt-6 text-center font-mono font-bold text-sm h-8 text-red-600";
+                    caja_aviso.textContent = "[!] ERROR: HERRAMIENTA DE CAPTURA NO DISPONIBLE.";
+                    caja_aviso.className = "mt-6 text-center font-mono font-bold text-sm h-8 text-red-600";
                     return;
                 }
                 
-                html2canvas(DOM.captureArea, {
+                // Mandatario tomando fotico pasandole configuraciones evadiendo trampas CORS bloqueadoras
+                html2canvas(elementos_interfaz.zona_captura, {
                     backgroundColor: null, 
                     scale: window.devicePixelRatio || 1, 
                     logging: false, 
+                    
+                    // Saltos barreras permitiendo fotografiar autoritos alojados sitios externos ajenos
                     allowTaint: true,
                     useCORS: true
-                }).then(canvas => {
+                }).then(lienzo_final => {
+                    
+                    // Pide turno navegador armando link falso clickeandolo bajando archivo directo
                     requestAnimationFrame(() => {
-                        const link = document.createElement('a');
-                        link.download = `Sombra_ID_${userName.replace(/\s+/g, '_')}.png`;
-                        link.href = canvas.toDataURL('image/png', 0.8); 
-                        link.click();
+                        const enlace_bajada = document.createElement('a');
                         
-                        msgBox.textContent = `[CAPTURA PNG DESCARGADA EXITOSAMENTE]`;
-                        msgBox.className = "mt-6 text-center font-mono font-bold text-sm h-8 text-green-700";
+                        // Formatea nombre archivo sustituyendo espaciados blancos metiendo barras pisas bajas
+                        enlace_bajada.download = `Sombra_ID_${nombre_leido.replace(/\s+/g, '_')}.png`;
+                        enlace_bajada.href = lienzo_final.toDataURL('image/png', 0.8); 
+                        
+                        // Ejecuta pulsacion fantasma forzando gestor descargas guardar souvenir localmente
+                        enlace_bajada.click();
+                        
+                        // Imprime exito rotundo tiñendo verde confirmando operacion culminada exitosa
+                        caja_aviso.textContent = `[CAPTURA PNG DESCARGADA EXITOSAMENTE]`;
+                        caja_aviso.className = "mt-6 text-center font-mono font-bold text-sm h-8 text-green-700";
                     });
                 }).catch(() => {
-                    msgBox.textContent = `[!] ERROR AL GENERAR CAPTURA.`;
-                    msgBox.className = "mt-6 text-center font-mono font-bold text-sm h-8 text-red-600";
+                    
+                    // Atrapa catastrofes renderizados chivando error color rojo sangre furioso
+                    caja_aviso.textContent = `[!] ERROR AL GENERAR CAPTURA.`;
+                    caja_aviso.className = "mt-6 text-center font-mono font-bold text-sm h-8 text-red-600";
                 });
             }, 100);
         };
 
-        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-        let konamiIndex = 0;
+        // Arreglo guardando legendario codigo trampa consolas ochentosas abriendo portales interdimensionales
+        const patron_konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let indice_konami = 0;
 
+        // Escucha tecleos sigilosamente comparando patrones esperados desbloqueando secretos profundos
         document.addEventListener('keydown', (e) => {
-            const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-            const expectedKey = konamiCode[konamiIndex].length === 1 ? konamiCode[konamiIndex].toLowerCase() : konamiCode[konamiIndex];
+            const tecla = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+            const tecla_esperada = patron_konami[indice_konami].length === 1 ? patron_konami[indice_konami].toLowerCase() : patron_konami[indice_konami];
 
-            if (key === expectedKey) {
-                konamiIndex++;
-                if (konamiIndex === konamiCode.length) {
+            // Acumula exitos avanzando punteros comprobador si letra pulsada era correcta
+            if (tecla === tecla_esperada) {
+                indice_konami++;
+                
+                // Remata combo mandando viajero directamente repositorio madre creador universal
+                if (indice_konami === patron_konami.length) {
                     window.location.href = 'https://github.com/thegabrielplusx/cifradordeGabrielplusx';
-                    konamiIndex = 0; 
+                    indice_konami = 0; 
                 }
             } else {
-                konamiIndex = (key === (konamiCode[0].length === 1 ? konamiCode[0].toLowerCase() : konamiCode[0])) ? 1 : 0;
+                
+                // Castiga equivocaciones reseteando contador cero pidiendo empezar nuevamente combinacion
+                indice_konami = (tecla === (patron_konami[0].length === 1 ? patron_konami[0].toLowerCase() : patron_konami[0])) ? 1 : 0;
             }
         });
     </script>
